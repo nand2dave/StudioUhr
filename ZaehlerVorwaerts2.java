@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Text;
 
 public class ZaehlerVorwaerts2 {
 
-  public static void main(String[] args) {
+  public void Zaehler () {
 	  
     final Display display = new Display();
     final Shell shell = new Shell(display);

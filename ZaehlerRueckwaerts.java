@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-public class test2_working {
+public class ZaehlerRueckwaerts {
 
   public static void main(String[] args) {
 	  
