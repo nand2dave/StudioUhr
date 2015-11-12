@@ -14,6 +14,8 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Button;
@@ -21,6 +23,8 @@ import org.eclipse.swt.layout.GridData;
 import swing2swt.layout.FlowLayout;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.TableItem;
+import java.io.File;
 
 public class Editor extends Shell {
 	private Table editor_table;
@@ -61,6 +65,31 @@ public class Editor extends Shell {
 		formLayout.spacing = 1;
 		setLayout(formLayout);
 		
+	//	ButtonImageScale scale = new ButtonImageScale();			// Buttonscale Klasse 
+		
+		
+		Image Editor_back = new Image(display, 										//<- .....
+			    Login.class.getResourceAsStream(
+			      "Editor_Backdrop.jpg"));	
+		Image IKS = new Image(display, 										//<- .....
+			    Login.class.getResourceAsStream(
+			      "IKS.jpg"));	
+		Image Running_btn = new Image(display, 										//<- .....
+			    Login.class.getResourceAsStream(
+			      "Running_btn.jpg"));	
+		Image Time_btn = new Image(display, 										//<- .....
+			    Login.class.getResourceAsStream(
+			      "Time_btn.jpg"));	
+		
+		
+		//Imagesize();
+		
+		this.setBackgroundMode(SWT.INHERIT_FORCE);
+		this.setBackgroundImage(Editor_back);
+		this.setImage(IKS);
+		
+		
+		
 		Menu menu = new Menu(this, SWT.BAR);
 		setMenuBar(menu);
 		
@@ -98,11 +127,10 @@ public class Editor extends Shell {
 		Running_comp.setLayoutData(fd_Running_comp);
 		
 		Button Runningstamp_button = new Button(Running_comp, SWT.NONE);
-		Runningstamp_button.setText("RUNNING");
+		Runningstamp_button.setText("40:20");
 		
-		FontData[] fD1 = Runningstamp_button.getFont().getFontData();
-		fD1[0].setHeight(20);
-		Runningstamp_button.setFont( new Font(display,fD1[0]));
+		Runningstamp_button.setBackgroundImage(Running_btn); 							// RUNNING BACKDROP
+	
 		
 		Composite Buttons_comp = new Composite(this, SWT.NONE);
 		FillLayout fl_Buttons_comp = new FillLayout(SWT.HORIZONTAL);
@@ -117,6 +145,7 @@ public class Editor extends Shell {
 		Buttons_comp.setLayoutData(fd_Buttons_comp);
 		
 		Composite Tabel_comp = new Composite(this, SWT.NONE);
+		Tabel_comp.setBackgroundMode(SWT.INHERIT_DEFAULT);
 		fd_Buttons_comp.bottom = new FormAttachment(Tabel_comp, -23);
 		
 		Button Manualstart_button = new Button(Buttons_comp, SWT.NONE);
@@ -132,11 +161,16 @@ public class Editor extends Shell {
 		fd_Tabel_comp.left = new FormAttachment(Time_comp, 0, SWT.LEFT);
 		
 		Button Timestamp_button = new Button(Time_comp, SWT.NONE);
-		Timestamp_button.setText("TIME");
+		Timestamp_button.setAlignment(SWT.CENTER);
+		Timestamp_button.setText("13:37");
+
+		Timestamp_button.setBackgroundImage(Time_btn);						//  &ASEFASDASDAS
 		
-		FontData[] fD2 = Timestamp_button.getFont().getFontData();
-		fD2[0].setHeight(20);
-		Timestamp_button.setFont( new Font(display,fD2[0]));
+		FontData[] fD1 = Timestamp_button.getFont().getFontData();
+		fD1[0].setHeight(30);
+		fD1[0].setStyle(SWT.BOLD);												//<---
+		Runningstamp_button.setFont( new Font(display,fD1[0]));
+		Timestamp_button.setFont( new Font(display,fD1[0]));
 		
 		fd_Tabel_comp.right = new FormAttachment(100, -79);
 		fd_Tabel_comp.bottom = new FormAttachment(100);

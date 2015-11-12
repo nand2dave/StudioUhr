@@ -1,6 +1,7 @@
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -49,6 +50,9 @@ public class Moderator1 extends Shell {
 		fl_shell.marginWidth = 10;
 		fl_shell.marginHeight = 10;
 		setLayout(fl_shell);
+		
+		
+		
 		
 		Composite Background_comp = new Composite(this, SWT.NONE);
 		Background_comp.setLayout(new FillLayout(SWT.VERTICAL));
