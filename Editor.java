@@ -25,6 +25,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.TableItem;
 import java.io.File;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 public class Editor extends Shell {
 	private Table editor_table;
@@ -42,6 +44,7 @@ public class Editor extends Shell {
 			while (!shell.isDisposed()) {
 				if (!display.readAndDispatch()) {
 					display.sleep();
+					
 				}
 			}
 		} catch (Exception e) {
@@ -103,9 +106,30 @@ public class Editor extends Shell {
 		mntmswitch.setMenu(menu_1);
 		
 		MenuItem mntmModerator = new MenuItem(menu_1, SWT.NONE);
+		mntmModerator.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+				Moderator1 mod = new Moderator1(display);
+				mod.open();
+				
+			}
+		});
 		mntmModerator.setText("Moderator");
 		
 		MenuItem mntmStaff = new MenuItem(menu_1, SWT.NONE);
+		mntmStaff.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+			Staff staff = new Staff(display);
+		//	close();
+		//	dispose();
+			staff.main(null);
+
+		
+				
+			}
+		});
 		mntmStaff.setText("Staff");
 		
 		Composite Time_comp = new Composite(this, SWT.NONE);
