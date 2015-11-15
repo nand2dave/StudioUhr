@@ -185,7 +185,7 @@ public class Staff extends Shell {
 	 * Create contents of the shell.
 	 */
 	protected void createContents() {
-		setText("Editor Modus");
+		setText("Staff Modus");
 		setSize(733, 569);
 
 	}

@@ -57,6 +57,22 @@ public class Login {
 		label1.setText("Editor ");	
 		
 		Button Adminpass_button = new Button(adminlog_comp, SWT.NONE);
+		Adminpass_button.addSelectionListener(new SelectionAdapter() {
+			
+			public void widgetSelected(SelectionEvent e) {
+				
+		//	if (Adminpass_text.getText() == "Venetian")
+		//	{
+				Editor Editor = new Editor(display);
+				loginshell.close();
+				loginshell.dispose();
+				Editor.main(args);
+			//	loginshell.setVisible(false);
+;
+		//	};
+				
+			}
+		});
 		Adminpass_button.setBounds(211, 51, 100, 40);
 		Adminpass_button.setText("Login");
 		
