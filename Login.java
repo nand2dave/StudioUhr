@@ -10,6 +10,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 public class Login {
 	private static Text Adminpass_text;
@@ -40,6 +42,7 @@ public class Login {
 		loginshell.setBackgroundMode(SWT.INHERIT_FORCE);
 		loginshell.setBackgroundImage(image);
 		loginshell.setImage(IKS);
+
 		
 	
 		
@@ -77,6 +80,7 @@ public class Login {
 		Userpass_text.setBounds(49, 67, 153, 21);
 		
 		Button Userpass_button = new Button(userlog_comp, SWT.NONE);
+		
 		Userpass_button.setText("Login");
 		Userpass_button.setBounds(208, 56, 100, 40);
 		
@@ -100,9 +104,10 @@ public class Login {
 		while (!loginshell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
-			//	WhiteImg.dispose();				// <---- ... 
-			//	image.dispose();
-			//	IKS.dispose();
+				IKS.dispose();
+				image.dispose();
+				WhiteImg.dispose();
+				// <---- ... 
 			}
 		}
 	}
