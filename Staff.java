@@ -14,6 +14,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Button;
@@ -60,6 +61,28 @@ public class Staff extends Shell {
 		formLayout.spacing = 1;
 		setLayout(formLayout);
 		
+		
+		Image Editor_back = new Image(display, 										//<- .....
+			    Login.class.getResourceAsStream(
+			      "Editor_Backdrop.jpg"));	
+		Image IKS = new Image(display, 										//<- .....
+			    Login.class.getResourceAsStream(
+			      "IKS.jpg"));	
+		Image Running_btn = new Image(display, 										//<- .....
+			    Login.class.getResourceAsStream(
+			      "Running_btn.jpg"));	
+		Image Time_btn = new Image(display, 										//<- .....
+			    Login.class.getResourceAsStream(
+			      "Time_btn.jpg"));	
+		
+		
+		this.setBackgroundMode(SWT.INHERIT_FORCE);
+		this.setBackgroundImage(Editor_back);
+		this.setImage(IKS);
+		
+		
+		
+		
 		Composite Time_comp = new Composite(this, SWT.NONE);
 		Time_comp.setLayout(new FillLayout(SWT.HORIZONTAL));
 		FormData fd_Time_comp = new FormData();
@@ -79,11 +102,9 @@ public class Staff extends Shell {
 		Running_comp.setLayoutData(fd_Running_comp);
 		
 		Button Runningstamp_button = new Button(Running_comp, SWT.NONE);
-		Runningstamp_button.setText("RUNNING");
+		Runningstamp_button.setText("40:20");
 		
-		FontData[] fD1 = Runningstamp_button.getFont().getFontData();
-		fD1[0].setHeight(20);
-		Runningstamp_button.setFont( new Font(display,fD1[0]));
+		Runningstamp_button.setBackgroundImage(Running_btn); 							// RUNNING BACKDROP
 		
 		Composite Buttons_comp = new Composite(this, SWT.NONE);
 		FillLayout fl_Buttons_comp = new FillLayout(SWT.HORIZONTAL);
@@ -99,6 +120,8 @@ public class Staff extends Shell {
 		
 		Composite Tabel_comp = new Composite(this, SWT.NONE);
 		fd_Buttons_comp.bottom = new FormAttachment(Tabel_comp, -23);
+		Tabel_comp.setBackgroundMode(SWT.INHERIT_DEFAULT);
+		
 		
 		Button Save_button = new Button(Buttons_comp, SWT.NONE);
 		Save_button.setText("SAVE");
@@ -110,11 +133,17 @@ public class Staff extends Shell {
 		fd_Tabel_comp.left = new FormAttachment(Time_comp, 0, SWT.LEFT);
 		
 		Button Timestamp_button = new Button(Time_comp, SWT.NONE);
-		Timestamp_button.setText("TIME");
+		Timestamp_button.setText("13:37");
+		
+		Timestamp_button.setBackgroundImage(Time_btn);						//  &ASEFASD
 		
 		FontData[] fD2 = Timestamp_button.getFont().getFontData();
-		fD2[0].setHeight(20);
+		fD2[0].setHeight(30);
+		fD2[0].setStyle(SWT.BOLD);	
+		
 		Timestamp_button.setFont( new Font(display,fD2[0]));
+		Runningstamp_button.setFont( new Font(display,fD2[0]));
+		
 		
 		fd_Tabel_comp.right = new FormAttachment(100, -79);
 		fd_Tabel_comp.bottom = new FormAttachment(100);
@@ -156,7 +185,7 @@ public class Staff extends Shell {
 	 * Create contents of the shell.
 	 */
 	protected void createContents() {
-		setText("Editor Modus");
+		setText("Staff Modus");
 		setSize(733, 569);
 
 	}
