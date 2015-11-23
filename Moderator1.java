@@ -203,6 +203,51 @@ public class Moderator1 extends Shell {
 		fD1[0].setHeight(30);
 		fD1[0].setStyle(SWT.BOLD);
 		Dauer_1_label.setFont(new Font(display,fD1[0])	);
+	
+		
+		/***ZAEHLER-LABEL***/
+
+	Dauer_1_label.setFont(SWTResourceManager.getFont("Segoe UI", 32, SWT.BOLD));
+	Dauer_1_label.setBounds(0, 31, 181, 66);
+
+	AnzeigeFormat anzeigeFormat = new AnzeigeFormat();
+
+    //zeitvorgabe
+    int x = 3; //sekunden
+    int y = 1; //minuten
+    int z = 0; //stunden
+    display.timerExec(0, new Runnable() {
+      int sekunden = 0;
+      int minuten = 0;
+      int stunden = 0;
+      
+      public void run() {
+    	if (sekunden == x  && minuten == y && stunden == z){
+      	  anzeigeFormat.setTime(z,y,x); //setTime(int Stunden, int Minuten, int Sekunden)
+      	  Dauer_1_label.setText(anzeigeFormat.toMilitary());
+      	  Thread.currentThread().interrupt(); 
+      	  return;
+        }
+
+      
+        if (sekunden == 60 && minuten != 60){
+        	minuten++;
+        	sekunden = 0;
+        }
+        
+        if (sekunden == 60 && minuten == 60){
+        	stunden++;
+        	minuten = 0;
+        	sekunden = 0;
+        }
+                  
+  	  anzeigeFormat.setTime(stunden, minuten, sekunden);
+  	  Dauer_1_label.setText(anzeigeFormat.toMilitary());
+  	  display.timerExec(1000, this);
+  	  sekunden++;
+       }
+    });
+	/***ZAEHLER-LABEL ENDE***/
 		
 		Label Dauer_2_label = new Label(Dauer_comp, SWT.NONE);
 		Dauer_2_label.setText("test1");
