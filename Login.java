@@ -73,7 +73,7 @@ public class Login {
 						else{
 							System.out.println("Passwort lautet: 123");
 							Shell shell = new Shell (display);							
-							int style = SWT.APPLICATION_MODAL  | SWT.OK;
+							int style = SWT.ICON_ERROR  | SWT.OK;
 							//int style = SWT.APPLICATION_MODAL | SWT.YES | SWT.NO;
 							MessageBox messageBox = new MessageBox (shell, style);
 							messageBox.setMessage ("Passwort falsch!");
@@ -128,7 +128,7 @@ public class Login {
 				else{
 					System.out.println("Passwort lautet: 123");
 					Shell shell = new Shell (display);							
-					int style = SWT.APPLICATION_MODAL  | SWT.OK;
+					int style = SWT.ICON_ERROR  | SWT.OK;
 					//int style = SWT.APPLICATION_MODAL | SWT.YES | SWT.NO;
 					MessageBox messageBox = new MessageBox (shell, style);
 					messageBox.setMessage ("Passwort falsch!");
@@ -181,7 +181,7 @@ public class Login {
 				else{
 					System.out.println("Passwort lautet: 234");
 					Shell shell = new Shell (display);							
-					int style = SWT.APPLICATION_MODAL  | SWT.OK;
+					int style = SWT.ICON_ERROR  | SWT.OK;
 					//int style = SWT.APPLICATION_MODAL | SWT.YES | SWT.NO;
 					MessageBox messageBox = new MessageBox (shell, style);
 					messageBox.setText ("Passwort erneut eingeben!");
