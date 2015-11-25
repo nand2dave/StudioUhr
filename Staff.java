@@ -37,7 +37,8 @@ public class Staff extends Shell {
 			shell.layout();
 			while (!shell.isDisposed()) {
 				if (!display.readAndDispatch()) {
-					display.sleep();
+				//	shell.clone();
+					display.sleep();	
 				}
 			}
 		} catch (Exception e) {
@@ -124,10 +125,10 @@ public class Staff extends Shell {
 		
 		
 		Button Save_button = new Button(Buttons_comp, SWT.NONE);
-		Save_button.setText("SAVE");
+		Save_button.setText("SPEICHERN");
 		
 		Button Next_button = new Button(Buttons_comp, SWT.NONE);
-		Next_button.setText("NEXT");
+		Next_button.setText("NAECHSTER PUNKT");
 		Tabel_comp.setLayout(new FillLayout(SWT.HORIZONTAL));
 		FormData fd_Tabel_comp = new FormData();
 		fd_Tabel_comp.left = new FormAttachment(Time_comp, 0, SWT.LEFT);
@@ -185,7 +186,7 @@ public class Staff extends Shell {
 	 * Create contents of the shell.
 	 */
 	protected void createContents() {
-		setText("Staff Modus");
+		setText("Staff");
 		setSize(733, 569);
 
 	}

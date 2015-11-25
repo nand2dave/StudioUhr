@@ -63,7 +63,7 @@ public class Moderator1 extends Shell {
 	public Moderator1(Display display) {
 		super(display, SWT.SHELL_TRIM);
 //		setLayout(new FormLayout());
-		setMinimumSize(new Point(740, 550));
+		setMinimumSize(new Point(900, 700));
 		setSize(741, 554);
 //		this.drawBackground(SWT.COLOR_BLACK);
 		FillLayout fl_shell = new FillLayout(SWT.VERTICAL);
@@ -76,10 +76,17 @@ public class Moderator1 extends Shell {
 		Image back = new Image(display, 										//<- .....
 			    Login.class.getResourceAsStream(
 			      "WhiteDrop.jpg"));	
-	//	this.setBackground(SWT.COLOR_BLACK);
 	
-		
+		Image IKS = new Image(display, 										//<- .....
+			    Login.class.getResourceAsStream(
+			      "IKS.jpg"));	
+			
 		Image back_scale = new Image(display, Login.class.getResourceAsStream("Slider_back.jpg"));
+		
+		
+		this.setImage(IKS);
+		
+		
 		
 		
 		Composite Background_comp = new Composite(this, SWT.NONE);
@@ -95,16 +102,17 @@ public class Moderator1 extends Shell {
 		TOP_Position_Label.setText("Position");
 		
 		FontData[] fD1 = TOP_Position_Label.getFont().getFontData();
-		fD1[0].setHeight(18);
+		fD1[0].setHeight(30);
 		fD1[0].setStyle(SWT.BOLD);
 	//	label1.setFont( new Font(display,fD1[0]));					// <-- ...
 
 		FontData[] fD2 = TOP_Position_Label.getFont().getFontData();
-		fD2[0].setHeight(16);
+		fD2[0].setHeight(22);
 		
 	
-
-
+		FontData[] fD3 = TOP_Position_Label.getFont().getFontData();
+		fD3[0].setHeight(40);
+		fD3[0].setStyle(SWT.BOLD);
 		
 		
 		
@@ -115,7 +123,7 @@ public class Moderator1 extends Shell {
 		Label Position_1_label = new Label(Position_comp, SWT.NONE);
 	//	Position_1_label.setFont(SWTResourceManager.getFont("Segoe UI", 16, SWT.BOLD));
 		Position_1_label.setFont(new Font(display,fD1[0])	);
-		Position_1_label.setBounds(10, 58, 35, 36);
+		Position_1_label.setBounds(10, 45, 196, 59);
 		Position_1_label.setText("1");
 
 		
@@ -123,16 +131,16 @@ public class Moderator1 extends Shell {
 		Position_2_label.setFont(SWTResourceManager.getFont("Segoe UI", 20, SWT.NORMAL));
 		Position_2_label.setFont( new Font(display,fD2[0]));
 		Position_2_label.setText("2");
-		Position_2_label.setBounds(10, 123, 85, 36);
+		Position_2_label.setBounds(10, 150, 196, 59);
 		
 		Label Position_3_label = new Label(Position_comp, SWT.NONE);
 		Position_3_label.setText("2");
 		Position_3_label.setFont(SWTResourceManager.getFont("Segoe UI", 20, SWT.NORMAL));
 		Position_3_label.setFont( new Font(display,fD2[0]));
-		Position_3_label.setBounds(10, 192, 85, 36);
+		Position_3_label.setBounds(10, 230, 196, 59);
 		
 		Label label_9 = new Label(Position_comp, SWT.SEPARATOR | SWT.HORIZONTAL);
-		label_9.setBounds(0, 100, 105, 2);
+		label_9.setBounds(0, 110, 166, 2);
 		
 		Composite Inhalt_comp = new Composite(Top_comp, SWT.NONE);
 		
@@ -143,7 +151,7 @@ public class Moderator1 extends Shell {
 		Label Inhalt_1_label = new Label(Inhalt_comp, SWT.NONE);
 		Inhalt_1_label.setText("Beitrag");
 		//Inhalt_1_label.setFont(SWTResourceManager.getFont("Segoe UI", 16, SWT.BOLD));
-		Inhalt_1_label.setBounds(0, 57, 162, 36);
+		Inhalt_1_label.setBounds(0, 45, 206, 59);
 		Inhalt_1_label.setFont(new Font(display,fD1[0])	);
 		
 		
@@ -151,16 +159,16 @@ public class Moderator1 extends Shell {
 		Inhalt_2_label.setText("test1");
 	//	Inhalt_2_label.setFont(SWTResourceManager.getFont("Segoe UI", 20, SWT.NORMAL));
 		Inhalt_2_label.setFont( new Font(display,fD2[0]));
-		Inhalt_2_label.setBounds(0, 121, 85, 36);
+		Inhalt_2_label.setBounds(10, 150, 196, 59);
 		
 		Label Inhalt_3_label = new Label(Inhalt_comp, SWT.NONE);
 		Inhalt_3_label.setText("test1");
 	//	Inhalt_3_label.setFont(SWTResourceManager.getFont("Segoe UI", 20, SWT.NORMAL));
 		Inhalt_3_label.setFont( new Font(display,fD2[0]));
-		Inhalt_3_label.setBounds(0, 193, 85, 36);
+		Inhalt_3_label.setBounds(10, 230, 196, 59);
 		
 		Label label_10 = new Label(Inhalt_comp, SWT.SEPARATOR | SWT.HORIZONTAL);
-		label_10.setBounds(0, 99, 162, 2);
+		label_10.setBounds(0, 110, 162, 2);
 		
 		Composite Typ_comp = new Composite(Top_comp, SWT.NONE);
 		
@@ -171,7 +179,7 @@ public class Moderator1 extends Shell {
 		Label Typ_1_label = new Label(Typ_comp, SWT.NONE);
 		Typ_1_label.setText("MAZ");
 	//	Typ_1_label.setFont(SWTResourceManager.getFont("Segoe UI", 16, SWT.BOLD));
-		Typ_1_label.setBounds(0, 57, 148, 36);
+		Typ_1_label.setBounds(10, 43, 196, 61);
 		Position_1_label.setFont(new Font(display,fD1[0])	);
 		Typ_1_label.setFont(new Font(display,fD1[0])	);
 		
@@ -179,16 +187,16 @@ public class Moderator1 extends Shell {
 		Typ_2_label.setText("test1");
 		//Typ_2_label.setFont(SWTResourceManager.getFont("Segoe UI", 20, SWT.NORMAL));
 		Typ_2_label.setFont( new Font(display,fD2[0]));
-		Typ_2_label.setBounds(0, 121, 85, 36);
+		Typ_2_label.setBounds(10, 143, 184, 61);
 		
 		Label Typ_3_label = new Label(Typ_comp, SWT.NONE);
 		Typ_3_label.setText("test1");
 	//	Typ_3_label.setFont(SWTResourceManager.getFont("Segoe UI", 20, SWT.NORMAL));
 		Typ_3_label.setFont( new Font(display,fD2[0]));
-		Typ_3_label.setBounds(0, 195, 85, 36);
+		Typ_3_label.setBounds(10, 230, 184, 61);
 		
 		Label label_11 = new Label(Typ_comp, SWT.SEPARATOR | SWT.HORIZONTAL);
-		label_11.setBounds(0, 99, 148, 2);
+		label_11.setBounds(0, 110, 148, 2);
 		
 		Composite Dauer_comp = new Composite(Top_comp, SWT.NONE);
 		
@@ -200,9 +208,8 @@ public class Moderator1 extends Shell {
 		Dauer_1_label.setText("00:03:00");
 		//Dauer_1_label.setFont(SWTResourceManager.getFont("Segoe UI", 32, SWT.BOLD));
 		Dauer_1_label.setBounds(0, 31, 181, 66);
-		fD1[0].setHeight(30);
-		fD1[0].setStyle(SWT.BOLD);
-		Dauer_1_label.setFont(new Font(display,fD1[0])	);
+	
+		Dauer_1_label.setFont(new Font(display,fD3[0])	);
 	
 		
 		/***ZAEHLER-LABEL***/
@@ -253,7 +260,7 @@ public class Moderator1 extends Shell {
 		Dauer_2_label.setText("test1");
 		//Dauer_2_label.setFont(SWTResourceManager.getFont("Segoe UI", 20, SWT.NORMAL));
 		Dauer_2_label.setFont( new Font(display,fD2[0]));
-		Dauer_2_label.setBounds(0, 125, 85, 36);
+		Dauer_2_label.setBounds(10, 150, 171, 74);
 		
 		
 		
@@ -261,10 +268,10 @@ public class Moderator1 extends Shell {
 		Dauer_3_label.setText("test1");
 	//	Dauer_3_label.setFont(SWTResourceManager.getFont("Segoe UI", 20, SWT.NORMAL));
 		Dauer_3_label.setFont( new Font(display,fD2[0]));
-		Dauer_3_label.setBounds(0, 197, 85, 36);
+		Dauer_3_label.setBounds(10, 230, 181, 66);
 		
 		Label label_12 = new Label(Dauer_comp, SWT.SEPARATOR | SWT.HORIZONTAL);
-		label_12.setBounds(0, 103, 181, 6);
+		label_12.setBounds(0, 110, 181, 6);
 		
 		Composite Slider_comp = new Composite(Background_comp, SWT.NONE);
 		FillLayout fl_Slider_comp = new FillLayout(SWT.HORIZONTAL);
@@ -273,12 +280,14 @@ public class Moderator1 extends Shell {
 		Slider_comp.setLayout(fl_Slider_comp);
 		
 		Slider slider = new Slider(Slider_comp, SWT.NONE);
+		Rectangle rect = getClientArea ();
+		slider.setBackgroundImage(resize(back_scale, rect.width, rect.height));	
 		
 		 this.addListener (SWT.Resize,  new Listener () {
 			    public void handleEvent (Event e) {
 			    	Rectangle rect = getClientArea ();
 			    	
-			    Slider_comp.setBackgroundImage(resize(back_scale, rect.width, rect.height));				   
+			    slider.setBackgroundImage(resize(back_scale, rect.width, rect.height));				   
 			    }
 			  });
 		
@@ -291,7 +300,7 @@ public class Moderator1 extends Shell {
 	 * Create contents of the shell.
 	 */
 	protected void createContents() {
-		setText("SWT Application");
+		setText("Moderator");
 		setSize(450, 300);
 
 	}
