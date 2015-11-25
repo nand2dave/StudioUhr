@@ -25,6 +25,7 @@ public class Login {
 	 * Launch the application.
 	 * @param args
 	 */
+	
 	public static void main(String[] args) {
 		Display display = Display.getDefault();
 		Shell loginshell = new Shell(display, SWT.CLOSE | SWT.TITLE | SWT.MIN );   // <- ....
@@ -161,37 +162,7 @@ public class Login {
 		
 		  
 		  
-		/***BUTTON2***/  
-		Button Userpass_button = new Button(userlog_comp, SWT.NONE);
-		
-		Userpass_button.setText("Login");
-		Userpass_button.setBounds(208, 56, 100, 40);
-		//Button Userpass_button = new Button(userlog_comp, SWT.NONE);
-		Userpass_button.setText("Login");
-		Userpass_button.setBounds(208, 56, 100, 40);
-		Userpass_button.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				if(Userpass_text.getText().equals("234")){
-					System.out.println("Passwort korrekt!");
-					Editor editor = new Editor(display);
-					loginshell.close();
-					loginshell.dispose();
-					editor.main(args);	
-				}	
-				else{
-					System.out.println("Passwort lautet: 234");
-					Shell shell = new Shell (display);							
-					int style = SWT.ICON_ERROR  | SWT.OK;
-					//int style = SWT.APPLICATION_MODAL | SWT.YES | SWT.NO;
-					MessageBox messageBox = new MessageBox (shell, style);
-					messageBox.setText ("Passwort erneut eingeben!");
-					messageBox.setMessage ("Passwort falsch!");
-					//event.doit = messageBox.open () == SWT.YES;
-					e.doit = messageBox.open () == SWT.OK;
-				}
-					
-			}
-		});
+
 
 		
 		/***CREW-RADIOBUTTON***/
@@ -228,7 +199,6 @@ public class Login {
 				public void keyTraversed(TraverseEvent e) {
 					if (e.detail == SWT.TRAVERSE_RETURN) {
 						e.doit = true;
-						System.out.println("Enter gedrückt!"); //Test
 						//Wenn Passwort für Crew-Fenster (Staff.java) korrekt
 						if(Userpass_text.getText().equals("234") 
 						   && Crew_RadioButton.getSelection() == true){
@@ -265,19 +235,52 @@ public class Login {
 						}
 						//Wenn Passwort für Crew- oder Moderatoren-Fenster nicht korrekt
 						else if (!(Userpass_text.getText().equals("234"))){
-							System.out.println("Passwort lautet: 234");
-							Shell shell = new Shell (display);							
-							int style = SWT.ICON_ERROR | SWT.OK;
-							//int style = SWT.APPLICATION_MODAL | SWT.YES | SWT.NO;
-							MessageBox messageBox = new MessageBox (shell, style);
-							messageBox.setMessage ("Crew- oder -Moderator-Button nicht ausgewählt!");
-							//event.doit = messageBox.open () == SWT.YES;
-							e.doit = messageBox.open () == SWT.OK;
+						  passwortFalschMessageBox(display, e);	
 						}
 					}
 				}
 			});
 		  
+		  
+			/***BUTTON2***/  
+			Button Userpass_button = new Button(userlog_comp, SWT.NONE);
+			
+			Userpass_button.setText("Login");
+			Userpass_button.setBounds(208, 56, 100, 40);
+			//Button Userpass_button = new Button(userlog_comp, SWT.NONE);
+			Userpass_button.setText("Login");
+			Userpass_button.setBounds(208, 56, 100, 40);
+			Userpass_button.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent e) {
+					if(Userpass_text.getText().equals("234")
+							//Passwort für Crew korrekt
+						   && Crew_RadioButton.getSelection() == true){
+						//Öffne Staff.java
+							System.out.println("Passwort korrekt!");
+							Staff staff = new Staff(display);
+							loginshell.close();
+							loginshell.dispose();
+							staff.main(args);
+					}	
+					//Wenn Passwort für Moderatoren-Fenster korrekt
+					else if (Userpass_text.getText().equals("234")
+							 && Moderator_RadioButton_1.getSelection() == true){
+						System.out.println("Passwort korrekt!");
+						Moderator1 moderator1 = new Moderator1(display);
+						loginshell.close();
+						loginshell.dispose();
+						moderator1.main(args);	
+					}
+					//wenn passwort korrekt, aber Moderator- oder Crew-Radiobutton nicht ausgewählt
+					else if (Userpass_text.getText().equals("234") 
+						     && Crew_RadioButton.getSelection() == false
+						     && Moderator_RadioButton_1.getSelection() == false)
+						radiobuttonError(display, e);
+					//Wenn Passwort für Crew- oder Moderatoren-Fenster nicht korrekt
+					else if (!(Userpass_text.getText().equals("234")))
+					  passwortFalschMessageBox(display, e);		
+				}
+			});
 		  
 		/***BELLETRISTIK***/
 		Adminpass_text.setBackgroundImage(WhiteImg);				//<---
@@ -298,4 +301,42 @@ public class Login {
 			}
 		}
 	}
+	
+	//ausgelagerte Methoden für Dialogfenster
+	public static void passwortFalschMessageBox(Display display, SelectionEvent e) {
+		Shell shell = new Shell(display);
+		int style = SWT.ICON_ERROR | SWT.CENTER | SWT.OK;
+		MessageBox messageBox = new MessageBox(shell, style);
+		messageBox.setMessage("       Passwort falsch!");
+		e.doit = messageBox.open() == SWT.OK;
+	}
+	
+	public static void passwortFalschMessageBox(Display display, TraverseEvent e) {
+		Shell shell = new Shell(display);
+		int style = SWT.ICON_ERROR | SWT.CENTER | SWT.OK;
+		MessageBox messageBox = new MessageBox(shell, style);
+		messageBox.setMessage("       Passwort falsch!");
+		e.doit = messageBox.open() == SWT.OK;
+	}
+	
+	public static void radiobuttonError(Display display, SelectionEvent e) {
+		System.out.println("Passwort lautet: 234");
+		Shell shell = new Shell (display);							
+		int style = SWT.ICON_ERROR | SWT.OK;
+		MessageBox messageBox = new MessageBox (shell, style);
+		messageBox.setMessage ("Crew- oder -Moderator-Button nicht ausgewählt!");
+		e.doit = messageBox.open () == SWT.OK;
+	}
+	
+	public static void radiobuttonError(Display display, TraverseEvent e) {
+		System.out.println("Passwort lautet: 234");
+		Shell shell = new Shell (display);							
+		int style = SWT.ICON_ERROR | SWT.OK;
+		MessageBox messageBox = new MessageBox (shell, style);
+		messageBox.setMessage ("Crew- oder -Moderator-Button nicht ausgewählt!");
+		e.doit = messageBox.open () == SWT.OK;
+	}
+	
 }
+
+
