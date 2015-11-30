@@ -1,6 +1,8 @@
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -144,7 +146,7 @@ public class Login {
 		Composite userlog_comp = new Composite(loginshell, SWT.NONE);
 		
 		Label label2 = new Label(userlog_comp, SWT.BORDER);
-		label2.setText("Crew / Moderator");
+		label2.setText("Staff / Moderator");
 		label2.setAlignment(SWT.CENTER);
 		label2.setBounds(125, 10, 183, 21);
 		
@@ -172,19 +174,23 @@ public class Login {
 	        System.out.print(button.getText());
 	        System.out.println(" selected = " + button.getSelection());
 	             //Login.crewButtonSelected = true;
-	        button.setSelection(true);
+	   //     button.setSelection(true);
 	        };
 	    };
-	      
-		Button Crew_RadioButton = new Button(userlog_comp, SWT.RADIO);
-		Crew_RadioButton.setBounds(334, 38, 90, 16);
+	     
+	    Group RadioButtons = new Group(userlog_comp, SWT.SHADOW_NONE);
+	    RadioButtons.setBounds(328, 31, 93, 65);
+	  //  RadioButtons.setLayout(new FillLayout(SWT.VERTICAL));
+	    
+		Button Crew_RadioButton = new Button(RadioButtons, SWT.RADIO);
+		Crew_RadioButton.setBounds(0, 10, 90, 16);
 		Crew_RadioButton.setText("Crew");
 		Crew_RadioButton.addSelectionListener(selectionListener);
 		  
 		
 		/***MODERATOREN-RADIOBUTTON***/
-		Button Moderator_RadioButton_1 = new Button(userlog_comp, SWT.RADIO);
-		Moderator_RadioButton_1.setBounds(334, 67, 90, 16);
+		Button Moderator_RadioButton_1 = new Button(RadioButtons, SWT.RADIO);
+		Moderator_RadioButton_1.setBounds(0, 33, 90, 16);
 		Moderator_RadioButton_1.setText("Moderator");
 		Moderator_RadioButton_1.addSelectionListener(selectionListener);
 
