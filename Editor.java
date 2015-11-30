@@ -114,28 +114,20 @@ public class Editor extends Shell {
 		
 		MenuItem mntmExit = new MenuItem(menu, SWT.NONE);
 		mntmExit.setText("Exit");
-		mntmExit.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-			close();
-			display.sleep();				
-			}
-		});
-		
 		
 		MenuItem mntmswitch = new MenuItem(menu, SWT.CASCADE);
-		mntmswitch.setText("Fenster");
+		mntmswitch.setText("Switch View");
 		
 		Menu menu_1 = new Menu(mntmswitch);
 		mntmswitch.setMenu(menu_1);
-				
+		
 		MenuItem mntmModerator = new MenuItem(menu_1, SWT.NONE);
 		mntmModerator.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				
 				Moderator1 mod = new Moderator1(display);
-				mod.main(null);
+				mod.open();
 				
 			}
 		});
@@ -236,18 +228,13 @@ public class Editor extends Shell {
 		fd_Buttons_comp.bottom = new FormAttachment(Tabel_comp, -23);
 		
 		Button Manualstart_button = new Button(Buttons_comp, SWT.NONE);
-		Manualstart_button.setText("MANUELLER START");
+		Manualstart_button.setText("MANUAL START");
 		
 		Button Save_button = new Button(Buttons_comp, SWT.NONE);
-		Save_button.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-			}
-		});
-		Save_button.setText("SPEICHERN");
+		Save_button.setText("SAVE");
 		
 		Button Manualstop_button = new Button(Buttons_comp, SWT.NONE);
-		Manualstop_button.setText("MANUELLER STOP");
+		Manualstop_button.setText("MANUAL STOP");
 		Tabel_comp.setLayout(new FillLayout(SWT.HORIZONTAL));
 		FormData fd_Tabel_comp = new FormData();
 		fd_Tabel_comp.left = new FormAttachment(Time_comp, 0, SWT.LEFT);
@@ -397,7 +384,7 @@ public class Editor extends Shell {
 	 * Create contents of the shell.
 	 */
 	protected void createContents() {
-		setText("Editor");
+		setText("Editor Modus");
 		setSize(733, 569);
 
 	}
