@@ -10,6 +10,8 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.graphics.Font;
@@ -21,9 +23,13 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.layout.GridData;
 import swing2swt.layout.FlowLayout;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
+import java.util.Arrays;
+import java.text.*;
+import java.util.*;
 
 public class Staff extends Shell {
-	private Table editor_table;
+	private Table table;
 
 	/**
 	 * Launch the application.
@@ -61,6 +67,9 @@ public class Staff extends Shell {
 		formLayout.spacing = 1;
 		setLayout(formLayout);
 		
+		//Open Connection to database
+		DBConnection dbconnection = new DBConnection();
+
 		
 		Image Editor_back = new Image(display, 										//<- .....
 			    Login.class.getResourceAsStream(
@@ -101,11 +110,49 @@ public class Staff extends Shell {
 		fd_Running_comp.bottom = new FormAttachment(0, 144);
 		Running_comp.setLayoutData(fd_Running_comp);
 		
+		/***ZAEHLER-BUTTON***/
 		Button Runningstamp_button = new Button(Running_comp, SWT.NONE);
-		Runningstamp_button.setText("40:20");
+		AnzeigeFormat anzeigeFormat = new AnzeigeFormat();
+
+	    //zeitvorgabe
+	    int setSeconds = 3; //sekunden
+	    int setMinutes = 1; //minuten
+	    int setHours = 0; //stunden		
+	    display.timerExec(0, new Runnable() {
+	        int sekunden = 0;
+	        int minuten = 0;
+	        int stunden = 0;
+	        
+	        public void run() {
+	      	if (sekunden == setSeconds  && minuten == setMinutes && stunden == setHours){
+	        	  anzeigeFormat.setTime(setHours,setMinutes,setSeconds); //setTime(int Stunden, int Minuten, int Sekunden)
+	        	  Runningstamp_button.setText(anzeigeFormat.toMilitary());
+	        	  Thread.currentThread().interrupt(); 
+	        	  return;
+	          }
+
+	        
+	          if (sekunden == 60 && minuten != 60){
+	          	minuten++;
+	          	sekunden = 0;
+	          }
+	          
+	          if (sekunden == 60 && minuten == 60){
+	          	stunden++;
+	          	minuten = 0;
+	          	sekunden = 0;
+	          }
+	                    
+	    	  anzeigeFormat.setTime(stunden, minuten, sekunden);
+	    	  Runningstamp_button.setText(anzeigeFormat.toMilitary());
+	    	  display.timerExec(1000, this);
+	    	  sekunden++;
+	         }
+	      });
+		//Runningstamp_button.setText("40:20");
 		
 		Runningstamp_button.setBackgroundImage(Running_btn); 							// RUNNING BACKDROP
-		
+
 		Composite Buttons_comp = new Composite(this, SWT.NONE);
 		FillLayout fl_Buttons_comp = new FillLayout(SWT.HORIZONTAL);
 		fl_Buttons_comp.marginHeight = 20;
@@ -128,12 +175,63 @@ public class Staff extends Shell {
 		
 		Button Next_button = new Button(Buttons_comp, SWT.NONE);
 		Next_button.setText("NEXT");
+		
+		
+		/***NEXT-BUTTON***/
+		Next_button.addSelectionListener(new SelectionAdapter() {
+		public void widgetSelected(SelectionEvent e) {
+		Date stopp = new Date();
+ 	  	String s = dbconnection.getServerZeit(); //gibt mir die ServerZeit, wenn es los geht
+ 	  	//wandle den String in ein Date-Objekt um
+ 	  	/*
+		DateFormat format = new SimpleDateFormat("HH:mm:ss");
+		Date serverStartZeit = null;//muss initialisiert werden...
+		try {
+			serverStartZeit = format.parse(s);
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		*/
+		//long ueberlauf = stopp.getTime()-serverStartZeit.getTime();
+ 	  	long ueberlauf = stopp.getTime()-dbconnection.date.getTime();
+		System.out.println(ueberlauf/1000);
+				}
+		});
+		 
+		
 		Tabel_comp.setLayout(new FillLayout(SWT.HORIZONTAL));
 		FormData fd_Tabel_comp = new FormData();
 		fd_Tabel_comp.left = new FormAttachment(Time_comp, 0, SWT.LEFT);
+
 		
+		/***ZEIT-BUTTON***/
 		Button Timestamp_button = new Button(Time_comp, SWT.NONE);
-		Timestamp_button.setText("13:37");
+
+	  	SimpleDateFormat hms = new SimpleDateFormat("HH:mm:ss");
+	  	
+	  	//Zeit vom Server holen
+	  	dbconnection.setTime();
+	    display.timerExec(0, new Runnable() {
+	        boolean bool = true;
+	        public void run() {
+	    	//  anzeigeFormat.setTime(stunden, minuten, sekunden);
+	         //Date time = new Date();
+	        	
+	        	//Die Zeit vom Server nehmen, einmalig (für den Start)
+	        	if (bool) {
+	        		Timestamp_button.setText(hms.format(dbconnection.date));
+	        		bool = false;
+	        	}
+	        	
+	        	//Ab jetzt die Rechnerinterne Zeit nehmen
+	        	Date time = new Date();
+ 	    	    Timestamp_button.setText(hms.format(time));
+	    	  display.timerExec(1000, this);
+	         }
+	      });
+	      
+		//Timestamp_button.setText("13:37");
 		
 		Timestamp_button.setBackgroundImage(Time_btn);						//  &ASEFASD
 		
@@ -150,35 +248,53 @@ public class Staff extends Shell {
 		fd_Tabel_comp.top = new FormAttachment(0, 290);
 		Tabel_comp.setLayoutData(fd_Tabel_comp);
 		
-		editor_table = new Table(Tabel_comp, SWT.BORDER | SWT.FULL_SELECTION);
-		editor_table.setHeaderVisible(true);
-		editor_table.setLinesVisible(true);
+		table = new Table(Tabel_comp, SWT.BORDER | SWT.FULL_SELECTION);
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
 		
-		TableColumn Column_position = new TableColumn(editor_table, SWT.CENTER);
+		TableColumn Column_position = new TableColumn(table, SWT.CENTER);
 		Column_position.setWidth(100);
 		Column_position.setText("Position");
 		
-		TableColumn Column_inhalt = new TableColumn(editor_table, SWT.NONE);
+		TableColumn Column_inhalt = new TableColumn(table, SWT.NONE);
 		Column_inhalt.setWidth(100);
 		Column_inhalt.setText("Inhalt");
 		
-		TableColumn Column_typ = new TableColumn(editor_table, SWT.CENTER);
+		TableColumn Column_typ = new TableColumn(table, SWT.CENTER);
 		Column_typ.setWidth(100);
 		Column_typ.setText("Typ");
 		
-		TableColumn Column_dauer = new TableColumn(editor_table, SWT.CENTER);
+		TableColumn Column_dauer = new TableColumn(table, SWT.CENTER);
 		Column_dauer.setWidth(100);
 		Column_dauer.setText("Dauer");
-		
+		/*
 		TableColumn Column_echtzeit = new TableColumn(editor_table, SWT.CENTER);
 		Column_echtzeit.setWidth(100);
 		Column_echtzeit.setText("Echtzeit");
-		
-		TableColumn Column_notes = new TableColumn(editor_table, SWT.CENTER);
+		*/
+		TableColumn Column_notes = new TableColumn(table, SWT.CENTER);
 		Column_notes.setMoveable(true);
 		Column_notes.setWidth(100);
 		Column_notes.setText("Notes");
 		createContents();
+		
+		/***TABLE-ITEMS***/
+		dbconnection.db_query("SELECT * FROM daten");
+		/*
+		int[] position = Arrays.copyOf(dbconnection.position,dbconnection.position.length); //index ist "anzhalZeilen" !!!
+		String[] inhalt = Arrays.copyOf(dbconnection.inhalt,dbconnection.inhalt.length);
+		String[] typ = Arrays.copyOf(dbconnection.typ,dbconnection.typ.length);
+		String[] beitragszeit = Arrays.copyOf(dbconnection.beitragszeit,dbconnection.beitragszeit.length);
+		String[] bemerkung = Arrays.copyOf(dbconnection.bemerkung,dbconnection.bemerkung.length);
+		*/
+		int rowCount = 2;
+		int columnCount = 5;
+		for (int i = 0; i < rowCount; i++) {
+			TableItem item = new TableItem(table, SWT.NONE);
+			for (int j = 0; j < columnCount; j++) {
+				item.setText(j, dbconnection.dbinhalt[i][j]);
+			}
+		}
 	}
 
 	/**
