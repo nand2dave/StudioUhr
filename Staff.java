@@ -115,9 +115,9 @@ public class Staff extends Shell {
 		AnzeigeFormat anzeigeFormat = new AnzeigeFormat();
 
 	    //zeitvorgabe
-	    int setSeconds = 3; //sekunden
-	    int setMinutes = 1; //minuten
-	    int setHours = 0; //stunden		
+	    int setSeconds = 0; //sekunden
+	    int setMinutes = 0; //minuten
+	    int setHours = 1; //stunden		
 	    display.timerExec(0, new Runnable() {
 	        int sekunden = 0;
 	        int minuten = 0;
@@ -171,10 +171,10 @@ public class Staff extends Shell {
 		
 		
 		Button Save_button = new Button(Buttons_comp, SWT.NONE);
-		Save_button.setText("SAVE");
+		Save_button.setText("SPEICHERN");
 		
 		Button Next_button = new Button(Buttons_comp, SWT.NONE);
-		Next_button.setText("NEXT");
+		Next_button.setText("WEITER");
 		
 		
 		/***NEXT-BUTTON***/

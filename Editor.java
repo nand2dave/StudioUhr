@@ -115,6 +115,17 @@ public class Editor extends Shell {
 		MenuItem mntmExit = new MenuItem(menu, SWT.NONE);
 		mntmExit.setText("Exit");
 		
+		mntmExit.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+				close();
+				dispose();
+				
+			}
+		});
+		
+		
 		MenuItem mntmswitch = new MenuItem(menu, SWT.CASCADE);
 		mntmswitch.setText("Switch View");
 		
@@ -127,7 +138,7 @@ public class Editor extends Shell {
 			public void widgetSelected(SelectionEvent e) {
 				
 				Moderator1 mod = new Moderator1(display);
-				mod.open();
+				mod.main(null);
 				
 			}
 		});
@@ -169,13 +180,12 @@ public class Editor extends Shell {
 		
 		/***ZAEHLER-BUTTON***/
 		Button Runningstamp_button = new Button(Running_comp, SWT.NONE);
-		Runningstamp_button.setText("00:00");
 		AnzeigeFormat anzeigeFormat = new AnzeigeFormat();
 
 	    //zeitvorgabe
 	    int setSeconds = 0; //sekunden
 	    int setMinutes = 0; //minuten
-	    int setHours = 0; //stunden		
+	    int setHours = 1; //stunden		
 	    display.timerExec(0, new Runnable() {
 	        int sekunden = 0;
 	        int minuten = 0;
@@ -228,13 +238,13 @@ public class Editor extends Shell {
 		fd_Buttons_comp.bottom = new FormAttachment(Tabel_comp, -23);
 		
 		Button Manualstart_button = new Button(Buttons_comp, SWT.NONE);
-		Manualstart_button.setText("MANUAL START");
+		Manualstart_button.setText("START");
 		
 		Button Save_button = new Button(Buttons_comp, SWT.NONE);
-		Save_button.setText("SAVE");
+		Save_button.setText("SPEICHERN");
 		
 		Button Manualstop_button = new Button(Buttons_comp, SWT.NONE);
-		Manualstop_button.setText("MANUAL STOP");
+		Manualstop_button.setText("STOP");
 		Tabel_comp.setLayout(new FillLayout(SWT.HORIZONTAL));
 		FormData fd_Tabel_comp = new FormData();
 		fd_Tabel_comp.left = new FormAttachment(Time_comp, 0, SWT.LEFT);
