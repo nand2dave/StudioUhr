@@ -24,12 +24,17 @@ import org.eclipse.swt.layout.GridData;
 import swing2swt.layout.FlowLayout;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import java.util.Arrays;
+
 import java.text.*;
 import java.util.*;
 
 public class Staff extends Shell {
 	private Table table;
+	SimpleDateFormat hms = new SimpleDateFormat("HH:mm:ss");
+	int rowCount = 3;
+	int columnCount = 5;
+	int tableStartValue = 0; // Wenn man "Next-Button" drückt, muss diese
+								// Variable hochgezaehlt werden
 
 	/**
 	 * Launch the application.
@@ -112,45 +117,22 @@ public class Staff extends Shell {
 		
 		/***ZAEHLER-BUTTON***/
 		Button Runningstamp_button = new Button(Running_comp, SWT.NONE);
-		AnzeigeFormat anzeigeFormat = new AnzeigeFormat();
 
-	    //zeitvorgabe
-	    int setSeconds = 0; //sekunden
-	    int setMinutes = 0; //minuten
-	    int setHours = 1; //stunden		
-	    display.timerExec(0, new Runnable() {
-	        int sekunden = 0;
-	        int minuten = 0;
-	        int stunden = 0;
-	        
-	        public void run() {
-	      	if (sekunden == setSeconds  && minuten == setMinutes && stunden == setHours){
-	        	  anzeigeFormat.setTime(setHours,setMinutes,setSeconds); //setTime(int Stunden, int Minuten, int Sekunden)
-	        	  Runningstamp_button.setText(anzeigeFormat.toMilitary());
-	        	  Thread.currentThread().interrupt(); 
-	        	  return;
-	          }
+		display.timerExec(0, new Runnable() {
 
-	        
-	          if (sekunden == 60 && minuten != 60){
-	          	minuten++;
-	          	sekunden = 0;
-	          }
-	          
-	          if (sekunden == 60 && minuten == 60){
-	          	stunden++;
-	          	minuten = 0;
-	          	sekunden = 0;
-	          }
-	                    
-	    	  anzeigeFormat.setTime(stunden, minuten, sekunden);
-	    	  Runningstamp_button.setText(anzeigeFormat.toMilitary());
-	    	  display.timerExec(1000, this);
-	    	  sekunden++;
-	         }
-	      });
-		//Runningstamp_button.setText("40:20");
-		
+
+				public void run() {
+
+					dbconnection.timerConnection();
+					dbconnection.getCurtime(); //Holt die aktuelle Zeit
+					long timeDifference = dbconnection.curTime.getTime()-dbconnection.serverTime.getTime();
+					Date anzeigeDate = new Date(timeDifference);
+					anzeigeDate.setHours(anzeigeDate.getHours()-1); //Eine Stunde abziehen, die aus mir unbekannten Gründen automatisch gesetzt ist
+					Runningstamp_button.setText(hms.format(anzeigeDate)); //Ausgabe auf Label
+					display.timerExec(1000, this);
+				}
+			});
+
 		Runningstamp_button.setBackgroundImage(Running_btn); 							// RUNNING BACKDROP
 
 		Composite Buttons_comp = new Composite(this, SWT.NONE);
@@ -177,61 +159,62 @@ public class Staff extends Shell {
 		Next_button.setText("WEITER");
 		
 		
-		/***NEXT-BUTTON***/
+		/*** NEXT-BUTTON ***/
 		Next_button.addSelectionListener(new SelectionAdapter() {
-		public void widgetSelected(SelectionEvent e) {
-		Date stopp = new Date();
- 	  	String s = dbconnection.getServerZeit(); //gibt mir die ServerZeit, wenn es los geht
- 	  	//wandle den String in ein Date-Objekt um
- 	  	/*
-		DateFormat format = new SimpleDateFormat("HH:mm:ss");
-		Date serverStartZeit = null;//muss initialisiert werden...
-		try {
-			serverStartZeit = format.parse(s);
-		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		*/
-		//long ueberlauf = stopp.getTime()-serverStartZeit.getTime();
- 	  	long ueberlauf = stopp.getTime()-dbconnection.date.getTime();
-		System.out.println(ueberlauf/1000);
+			public void widgetSelected(SelectionEvent e) {
+				
+				dbconnection.timerConnection();
+				dbconnection.getCurtime(); //Holt die aktuelle Zeit
+				dbconnection.getBeitragsZeit();
+				java.util.Date stopp = new Date();
+				java.util.Date start = new Date();
+				try {
+					start = hms.parse(dbconnection.currentTime);
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
+				String temporaryString = hms.format(stopp);
+				try {
+					stopp = hms.parse(temporaryString);
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+				long ueberlauf = stopp.getTime()-start.getTime();
+				ueberlauf /= 1000; //ueberlauf in Sekunden umrechnen
+				System.out.println("ueberlauf: " + ueberlauf);
+				if(ueberlauf > dbconnection.serverBeitragsZeit.getSeconds())
+					System.out.println("Zeitüberschreitung um " + ((int) ueberlauf - dbconnection.serverBeitragsZeit.getSeconds()) + " Sekunden");
+				
+				dbconnection.deleteFirstRow();
+				//lösche oberste Zeile aus dem Table, wenn keine bestimmte Zeile angewählt ist
+				table.remove(table.getTopIndex());
+				
+				//wenn bestimmte zeile im Table angewählt, so lösche diese im Table
+				if(table.getSelectionIndices () != null)
+					table.remove(table.getSelectionIndices ());				
+			}
 		});
 		 
-		
+		/***LAYOUT***/
 		Tabel_comp.setLayout(new FillLayout(SWT.HORIZONTAL));
 		FormData fd_Tabel_comp = new FormData();
 		fd_Tabel_comp.left = new FormAttachment(Time_comp, 0, SWT.LEFT);
 
 		
-		/***ZEIT-BUTTON***/
+		/*** ZEIT-BUTTON ***/
 		Button Timestamp_button = new Button(Time_comp, SWT.NONE);
+		// Zeit vom Server holen
+		display.timerExec(0, new Runnable() {
 
-	  	SimpleDateFormat hms = new SimpleDateFormat("HH:mm:ss");
-	  	
-	  	//Zeit vom Server holen
-	  	dbconnection.setTime();
-	    display.timerExec(0, new Runnable() {
-	        boolean bool = true;
-	        public void run() {
-	    	//  anzeigeFormat.setTime(stunden, minuten, sekunden);
-	         //Date time = new Date();
-	        	
-	        	//Die Zeit vom Server nehmen, einmalig (für den Start)
-	        	if (bool) {
-	        		Timestamp_button.setText(hms.format(dbconnection.date));
-	        		bool = false;
-	        	}
-	        	
-	        	//Ab jetzt die Rechnerinterne Zeit nehmen
-	        	Date time = new Date();
- 	    	    Timestamp_button.setText(hms.format(time));
-	    	  display.timerExec(1000, this);
-	         }
-	      });
-	      
-		//Timestamp_button.setText("13:37");
+			public void run() {
+				Timestamp_button.setText(hms.format(dbconnection.serverTime));
+				display.timerExec(1000, this);
+			}
+		});
+
 		
 		Timestamp_button.setBackgroundImage(Time_btn);						//  &ASEFASD
 		
@@ -248,7 +231,7 @@ public class Staff extends Shell {
 		fd_Tabel_comp.top = new FormAttachment(0, 290);
 		Tabel_comp.setLayoutData(fd_Tabel_comp);
 		
-		table = new Table(Tabel_comp, SWT.BORDER | SWT.FULL_SELECTION);
+		table = new Table(Tabel_comp, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI); //!!!
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		
@@ -278,17 +261,9 @@ public class Staff extends Shell {
 		Column_notes.setText("Notes");
 		createContents();
 		
-		/***TABLE-ITEMS***/
+		/*** TABLE-ITEMS ***/
 		dbconnection.db_query("SELECT * FROM daten");
-		/*
-		int[] position = Arrays.copyOf(dbconnection.position,dbconnection.position.length); //index ist "anzhalZeilen" !!!
-		String[] inhalt = Arrays.copyOf(dbconnection.inhalt,dbconnection.inhalt.length);
-		String[] typ = Arrays.copyOf(dbconnection.typ,dbconnection.typ.length);
-		String[] beitragszeit = Arrays.copyOf(dbconnection.beitragszeit,dbconnection.beitragszeit.length);
-		String[] bemerkung = Arrays.copyOf(dbconnection.bemerkung,dbconnection.bemerkung.length);
-		*/
-		int rowCount = 2;
-		int columnCount = 5;
+
 		for (int i = 0; i < rowCount; i++) {
 			TableItem item = new TableItem(table, SWT.NONE);
 			for (int j = 0; j < columnCount; j++) {
@@ -296,6 +271,7 @@ public class Staff extends Shell {
 			}
 		}
 	}
+
 
 	/**
 	 * Create contents of the shell.
