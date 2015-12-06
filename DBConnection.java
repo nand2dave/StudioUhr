@@ -17,6 +17,8 @@ public class DBConnection {
 	static final String USER = "student1";
 	static final String PASSWORD = "bain13a";
 
+  	SimpleDateFormat hms = new SimpleDateFormat("HH:mm:ss");
+
 	/*
 	 * int[] position = new int[5]; //index ist "anzhalZeilen" !!! String[]
 	 * inhalt = new String[5]; String[] typ = new String[5]; String[]
@@ -48,7 +50,7 @@ public class DBConnection {
 			ResultSet rs = stmt.executeQuery(query);
 
 			// STEP 5: Extract data from result set
-			int anzahlZeilen = 2; // !!!!je nachdem wieviele zeilen im editor
+			int anzahlZeilen = 3; // !!!!je nachdem wieviele zeilen im editor
 									// eingegeben wurden!!!
 			for (int i = 0; i < anzahlZeilen; i++) {
 				rs.next();
@@ -110,11 +112,14 @@ public class DBConnection {
 	}// end dbQuery(...)
 
 	
-	java.util.Date date;
+	
+	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+	java.util.Date serverTime;
+	long zwischen;
+	String serverTimeString;
+
 	
 	public void setTime() {
-		String currentTime = "";
-		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 
@@ -123,20 +128,22 @@ public class DBConnection {
 			stmt = conn.createStatement();
 
 			stmt.executeUpdate("DELETE FROM echtzeit"); //vorherige Einträge leeren
-			stmt.executeUpdate("INSERT INTO echtzeit VALUES(CURTIME())");
-			ResultSet rs = stmt.executeQuery("SELECT * FROM echtzeit");
-		//	currentTime = rs.getTime("zeit");
+			// Table neu indizieren: 
+			stmt.executeUpdate("ALTER TABLE echtzeit DROP id");
+			stmt.executeUpdate("ALTER TABLE echtzeit ADD id INT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (id), AUTO_INCREMENT=1");
+			stmt.executeUpdate("INSERT INTO echtzeit(zeit) VALUES(CURTIME())");
+			ResultSet rs = stmt.executeQuery("SELECT zeit FROM echtzeit");   
 						
 			//setze die Server-Zeit auf date-Variable
 			if (rs.next()){
-			Time time = rs.getTime("zeit");
+			
+			//hole Server Zeit
+			Time time = rs.getTime("zeit");	
 			System.out.println("Zeit auf DBConnection:");
 			if (time != null)
-			    date = new java.util.Date(time.getTime());
-			this.date = date;
-		  	SimpleDateFormat hms = new SimpleDateFormat("HH:mm:ss");
-	        currentTime = hms.format(date);
-	        System.out.println(currentTime);
+			    serverTime = new java.util.Date(time.getTime());
+		  //	SimpleDateFormat hms = new SimpleDateFormat("HH:mm:ss");
+	        serverTimeString = rs.getString("zeit");
 			}
 
 			rs.close();
@@ -167,20 +174,78 @@ public class DBConnection {
 	}//end setTime
 
 	
-	
-	public String getDauer(){
-		String dauer = "";
-		
+	String currentTime = "";
+	public void timerConnection() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
 			stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT Beitragszeit FROM daten");			
+			ResultSet rs = stmt.executeQuery("SELECT zeit FROM echtzeit");   
+						
+			//setze die Server-Zeit auf date-Variable
+			if (rs.next()){
+			
+			//hole Server Zeit
+			Time time = rs.getTime("zeit");	
+			System.out.println("Zeit auf DBConnection:");
+			if (time != null)
+			    serverTime = new java.util.Date(time.getTime());
+		  	SimpleDateFormat hms = new SimpleDateFormat("HH:mm:ss");
+	        currentTime = hms.format(serverTime);
+	        System.out.println(currentTime);
+	       // System.out.println(rs.getString("zeit"));  <--- abkürzung, gibt direkt die Zeit im String-Format aus...
+			}
+
+			rs.close();
+			stmt.close();
+			conn.close();
+		}
+
+		catch (SQLException se) {
+			// Handle errors for JDBC
+			se.printStackTrace();
+		} catch (Exception e) {
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		} finally {
+			// finally block used to close resources
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException se2) {
+			} // nothing we can do
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException se) {
+				se.printStackTrace();
+			} // end finally try
+		} // end try
+	}//end setTime
+	
+	
+	
+	String beitragsZeit = "";
+	java.util.Date serverBeitragsZeit;
+	Date x = new Date();
+	String test = "";
+	
+	public String getBeitragsZeit(){	
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+			stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT Beitragszeit FROM daten WHERE position = 1");			
 			
 			if (rs.next()){
-				dauer = rs.getString("Beitragszeit");
+
+				Time time = rs.getTime("Beitragszeit");	
+				if (time != null)
+				    serverBeitragsZeit = new java.util.Date(time.getTime());
+			  	SimpleDateFormat hms = new SimpleDateFormat("HH:mm:ss");
+		        beitragsZeit = hms.format(serverBeitragsZeit);
+		        System.out.println("beitragsZeit: " + beitragsZeit);
 			}
-			System.out.println(dauer);
 
 			rs.close();
 			stmt.close();
@@ -204,13 +269,161 @@ public class DBConnection {
 				se.printStackTrace();
 			} // end finally try
 		} // end try
-		return dauer;
+		return beitragsZeit;
 	}
+
+	
+	//Gibt die aktuelle Zeit auf dem Server aus, ohne diese in irgendeiner Tabelle zu speichern
+	java.util.Date curTime;
+	public String getCurtime(){	
+		String curtime = "";
+
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+			stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT CURTIME()");	
+			
+			if (rs.next()){			
+				curtime = rs.getString(1);
+				Time time = rs.getTime(1);	
+				System.out.println("Zeit auf DBConnection:");
+				if (time != null)
+				    curTime = new java.util.Date(time.getTime());
+				System.out.println("curTime Date-Objekt: "+hms.format(curTime));
+			}
+			rs.close();
+			stmt.close();
+			conn.close();
+			
+		}
+
+		catch (SQLException se) {
+			se.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException se2) {
+			} 
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException se) {
+				se.printStackTrace();
+			} // end finally try
+		} // end try
+		return curtime;
+
+	}
+
+	//Löscht die erst Zeile aus der Tabelle "daten"
+	public void deleteFirstRow(){	
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+			stmt = conn.createStatement();
+			stmt.executeUpdate("DELETE FROM daten WHERE position = 1;");
+			//Primary Key neu durchnummerieren, von 1 beginnend
+			stmt.executeUpdate("ALTER TABLE daten DROP position;");
+			stmt.executeUpdate("ALTER TABLE daten ADD position INT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (position), AUTO_INCREMENT=1;");
+						stmt.close();
+			conn.close();
+		}
+
+		catch (SQLException se) {
+			se.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException se2) {
+			} 
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException se) {
+				se.printStackTrace();
+			} // end finally try
+		} // end try
+	}
+	
+	
+	public void deleteRow(int rowIndex){
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+			stmt = conn.createStatement(); 
+			stmt.executeUpdate("DELETE FROM daten WHERE position = " + rowIndex + ";");
+
+			stmt.close();
+			conn.close();
+		}
+
+		catch (SQLException se) {
+			se.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException se2) {
+			} 
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException se) {
+				se.printStackTrace();
+			} // end finally try
+		} // end try
+	}
+	
+	public void restartDatabase(){
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+			stmt = conn.createStatement(); 
+			stmt.executeUpdate("DELETE FROM daten;");
+			stmt.executeUpdate("ALTER TABLE daten DROP position;");
+			stmt.executeUpdate("ALTER TABLE daten ADD position INT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (position), AUTO_INCREMENT=1;");
+			stmt.executeUpdate("INSERT INTO daten(Inhalt, Typ, Beitragszeit, Bemerkung) VALUES('Bsp.-Inhalt 1','Intro', '00:00:10','test')");
+			stmt.executeUpdate("INSERT INTO daten(Inhalt, Typ, Beitragszeit, Bemerkung) VALUES('Bsp.-Inhalt 2','Haupt-Teil', '00:00:15','test')");
+			stmt.executeUpdate("INSERT INTO daten(Inhalt, Typ, Beitragszeit, Bemerkung) VALUES('Bsp.-Inhalt 3','Outro', '00:00:15','test')");
+			System.out.println("Fertig!");
+			stmt.close();
+			conn.close();
+		}
+
+		catch (SQLException se) {
+			se.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException se2) {
+			} 
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException se) {
+				se.printStackTrace();
+			} // end finally try
+		} // end try
+		
+	}
+	
 	
 	public String getServerZeit(){
 		String zeit = "";
 		DateFormat format = new SimpleDateFormat("HH:mm:ss");
-		zeit = format.format(date);
+		zeit = format.format(serverBeitragsZeit);
 		return zeit;
 	}
 }// end DBConnection
