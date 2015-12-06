@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 import java.io.File;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -80,13 +81,16 @@ public class Editor extends Shell {
 		formLayout.spacing = 1;
 		setLayout(formLayout);
 		
+		SimpleDateFormat hms = new SimpleDateFormat("HH:mm:ss");
+
+		
 	//	ButtonImageScale scale = new ButtonImageScale();			// Buttonscale Klasse 
 		
-		/***DATENBANK-ANBINDUNG***/
-		DBConnection test = new DBConnection();
-		test.db_query("SELECT * FROM daten");
+		/*** DATENBANK-ANBINDUNG ***/
+		DBConnection dbconnection = new DBConnection();
+		dbconnection.setTime(); // setzt die Zeit nochmal neu!!
 		
-		/***BELLETRISTIK***/
+		/***DESIGN***/
 		Image Editor_back = new Image(display, 										//<- .....
 			    Login.class.getResourceAsStream(
 			      "Editor_Backdrop.jpg"));	
@@ -178,45 +182,23 @@ public class Editor extends Shell {
 		Running_comp.setLayoutData(fd_Running_comp);
 		
 		
-		/***ZAEHLER-BUTTON***/
+		/*** ZAEHLER-BUTTON ***/
 		Button Runningstamp_button = new Button(Running_comp, SWT.NONE);
-		AnzeigeFormat anzeigeFormat = new AnzeigeFormat();
+		Runningstamp_button.setText("00:00");
+		
+		display.timerExec(0, new Runnable() {
 
-	    //zeitvorgabe
-	    int setSeconds = 0; //sekunden
-	    int setMinutes = 0; //minuten
-	    int setHours = 1; //stunden		
-	    display.timerExec(0, new Runnable() {
-	        int sekunden = 0;
-	        int minuten = 0;
-	        int stunden = 0;
-	        
-	        public void run() {
-	      	if (sekunden == setSeconds  && minuten == setMinutes && stunden == setHours){
-	        	  anzeigeFormat.setTime(setHours,setMinutes,setSeconds); //setTime(int Stunden, int Minuten, int Sekunden)
-	        	  Runningstamp_button.setText(anzeigeFormat.toMilitary());
-	        	  Thread.currentThread().interrupt(); 
-	        	  return;
-	          }
+			public void run() {
+				dbconnection.timerConnection();
+				dbconnection.getCurtime(); //Holt die aktuelle Zeit
+				long timeDifference = dbconnection.curTime.getTime()-dbconnection.serverTime.getTime();
+				Date anzeigeDate = new Date(timeDifference);
+				anzeigeDate.setHours(anzeigeDate.getHours()-1); //Eine Stunde abziehen, die aus mir unbekannten Gründen automatisch gesetzt ist
+				Runningstamp_button.setText(hms.format(anzeigeDate)); //Ausgabe auf Label
+				display.timerExec(1000, this);
+			}
+		});
 
-	        
-	          if (sekunden == 60 && minuten != 60){
-	          	minuten++;
-	          	sekunden = 0;
-	          }
-	          
-	          if (sekunden == 60 && minuten == 60){
-	          	stunden++;
-	          	minuten = 0;
-	          	sekunden = 0;
-	          }
-	                    
-	    	  anzeigeFormat.setTime(stunden, minuten, sekunden);
-	    	  Runningstamp_button.setText(anzeigeFormat.toMilitary());
-	    	  display.timerExec(1000, this);
-	    	  sekunden++;
-	         }
-	      });
 	    
 		Runningstamp_button.setBackgroundImage(Running_btn); 							// RUNNING BACKDROP
 	
@@ -237,46 +219,58 @@ public class Editor extends Shell {
 		Tabel_comp.setBackgroundMode(SWT.INHERIT_DEFAULT);
 		fd_Buttons_comp.bottom = new FormAttachment(Tabel_comp, -23);
 		
+		/*** START-BUTTON ***/
 		Button Manualstart_button = new Button(Buttons_comp, SWT.NONE);
 		Manualstart_button.setText("START");
+		Manualstart_button.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				// dbconnection.setTime();
+				dbconnection.setTime();
+			}
+		});
 		
+		/*** SAVE-BUTTON ***/
 		Button Save_button = new Button(Buttons_comp, SWT.NONE);
 		Save_button.setText("SPEICHERN");
+		Save_button.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				dbconnection.setTime();
+			}
+		});
+		
 		
 		Button Manualstop_button = new Button(Buttons_comp, SWT.NONE);
 		Manualstop_button.setText("STOP");
 		Tabel_comp.setLayout(new FillLayout(SWT.HORIZONTAL));
 		FormData fd_Tabel_comp = new FormData();
 		fd_Tabel_comp.left = new FormAttachment(Time_comp, 0, SWT.LEFT);
+
 		
-		
-		/***ECHTZEIT-BUTTON***/
+		/*** ECHTZEIT-BUTTON ***/
 		Button Timestamp_button = new Button(Time_comp, SWT.NONE);
 		Timestamp_button.setAlignment(SWT.CENTER);
 		Timestamp_button.setText("13:37");
-		Timestamp_button.setBackgroundImage(Time_btn);	
-	  	SimpleDateFormat hms = new SimpleDateFormat("HH:mm:ss");
-	  	DBConnection dbconnection = new DBConnection();
-	  	dbconnection.setTime(); //setzt die Zeit nochmal neu!!
-	  	
-	  	display.timerExec(0, new Runnable() {
-	        boolean bool = true;
-	        public void run() {
-	    	//  anzeigeFormat.setTime(stunden, minuten, sekunden);
-	         //Date time = new Date();
-	        	
-	        	//Die Zeit vom Server nehmen, einmalig (für den Start)
-	        	if (bool) {
-	        		Timestamp_button.setText(hms.format(dbconnection.date));
-	        		bool = false;
-	        	}
-	        	
-	        	//Ab jetzt die Rechnerinterne Zeit nehmen
-	        	Date time = new Date();
- 	    	    Timestamp_button.setText(hms.format(time));
-	    	  display.timerExec(1000, this);
-	         }
-	      });
+		Timestamp_button.setBackgroundImage(Time_btn);
+
+		display.timerExec(0, new Runnable() {
+			boolean bool = true;
+
+			public void run() {
+				// anzeigeFormat.setTime(stunden, minuten, sekunden);
+				// Date time = new Date();
+
+				// Die Zeit vom Server nehmen, einmalig (für den Start)
+				if (bool) {
+					Timestamp_button.setText(hms.format(dbconnection.serverTime));
+					bool = false;
+				}
+
+				// Ab jetzt die Rechnerinterne Zeit nehmen
+				Date time = new Date();
+				Timestamp_button.setText(hms.format(time));
+				display.timerExec(1000, this);
+			}
+		});
 	    
 		FontData[] fD1 = Timestamp_button.getFont().getFontData();
 		fD1[0].setHeight(30);
@@ -291,7 +285,7 @@ public class Editor extends Shell {
 		
 		
 		/***TABLE***/
-		table = new Table(Tabel_comp, SWT.BORDER | SWT.FULL_SELECTION);
+		table = new Table(Tabel_comp, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI); //!!!
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		
@@ -325,65 +319,65 @@ public class Editor extends Shell {
 		createContents();
 		
 		
-		/***TABLE-ITEMS + TABLE-EDITOR***/
-		for (int i=0; i<3; i++) {
-			TableItem item = new TableItem (table, SWT.NONE);
-			item.setText(new String [] {"" + 1, "" + 2 , "" + 3, "" + 4, "" + 5});
+		/*** TABLE-ITEMS + TABLE-EDITOR ***/
+		for (int i = 0; i < 3; i++) {
+			TableItem item = new TableItem(table, SWT.NONE);
+			item.setText(new String[] { "" + 1, "" + 2, "" + 3, "" + 4, "" + 5 });
 		}
-		final TableEditor editor = new TableEditor (table);
+		final TableEditor editor = new TableEditor(table);
 		editor.horizontalAlignment = SWT.LEFT;
 		editor.grabHorizontal = true;
-		
-		
-		/***TABLE-LISTENER***/
-		table.addListener (SWT.MouseDown, new Listener () {
+
+		/*** TABLE-LISTENER ***/
+		table.addListener(SWT.MouseDown, new Listener() {
 			@Override
-			public void handleEvent (Event event) {
-				Rectangle clientArea = table.getClientArea ();
-				Point pt = new Point (event.x, event.y);
-				int index = table.getTopIndex ();
-				while (index < table.getItemCount ()) {
+			public void handleEvent(Event event) {
+				Rectangle clientArea = table.getClientArea();
+				Point pt = new Point(event.x, event.y);
+				int index = table.getTopIndex();
+				while (index < table.getItemCount()) {
 					boolean visible = false;
-					final TableItem item = table.getItem (index);
-					for (int i=0; i<table.getColumnCount (); i++) {
-						Rectangle rect = item.getBounds (i);
-						if (rect.contains (pt)) {
+					final TableItem item = table.getItem(index);
+					for (int i = 0; i < table.getColumnCount(); i++) {
+						Rectangle rect = item.getBounds(i);
+						if (rect.contains(pt)) {
 							final int column = i;
-							final Text text = new Text (table, SWT.NONE);
-							Listener textListener = new Listener () {
+							final Text text = new Text(table, SWT.NONE);
+							Listener textListener = new Listener() {
 								@Override
-								public void handleEvent (final Event e) {
+								public void handleEvent(final Event e) {
 									switch (e.type) {
-										case SWT.FocusOut:
-											item.setText (column, text.getText ());
-											text.dispose ();
-											break;
-										case SWT.Traverse:
-											switch (e.detail) {
-												case SWT.TRAVERSE_RETURN:
-													item.setText (column, text.getText ());
-													//FALL THROUGH
-												case SWT.TRAVERSE_ESCAPE:
-													text.dispose ();
-													e.doit = false;
-											}
-											break;
+									case SWT.FocusOut:
+										item.setText(column, text.getText());
+										text.dispose();
+										break;
+									case SWT.Traverse:
+										switch (e.detail) {
+										case SWT.TRAVERSE_RETURN:
+											item.setText(column, text.getText());
+											// FALL THROUGH
+										case SWT.TRAVERSE_ESCAPE:
+											text.dispose();
+											e.doit = false;
+										}
+										break;
 									}
 								}
 							};
-							text.addListener (SWT.FocusOut, textListener);
-							text.addListener (SWT.Traverse, textListener);
-							editor.setEditor (text, item, i);
-							text.setText (item.getText (i));
-							text.selectAll ();
-							text.setFocus ();
+							text.addListener(SWT.FocusOut, textListener);
+							text.addListener(SWT.Traverse, textListener);
+							editor.setEditor(text, item, i);
+							text.setText(item.getText(i));
+							text.selectAll();
+							text.setFocus();
 							return;
 						}
-						if (!visible && rect.intersects (clientArea)) {
+						if (!visible && rect.intersects(clientArea)) {
 							visible = true;
 						}
 					}
-					if (!visible) return;
+					if (!visible)
+						return;
 					index++;
 				}
 			}
