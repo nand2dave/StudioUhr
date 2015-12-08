@@ -44,6 +44,8 @@ import org.eclipse.swt.events.SelectionEvent;
 public class Editor extends Shell {
 	private Table table;
 
+	
+	private long DatabaseTime; //!!!
 	/**
 	 * Launch the application.
 	 * @param args
@@ -52,12 +54,13 @@ public class Editor extends Shell {
 		try {
 			Display display = Display.getDefault();
 			Editor shell = new Editor(display);
+			// OPEN DATABASE CONNECTION
 			shell.open();
 			shell.layout();
 			while (!shell.isDisposed()) {
 				if (!display.readAndDispatch()) {
 					display.sleep();
-					
+					// CLOSE DATABASE CONNECTION
 				}
 			}
 		} catch (Exception e) {
@@ -185,17 +188,18 @@ public class Editor extends Shell {
 		/*** ZAEHLER-BUTTON ***/
 		Button Runningstamp_button = new Button(Running_comp, SWT.NONE);
 		Runningstamp_button.setText("00:00");
-		
-		display.timerExec(0, new Runnable() {
+		dbconnection.timerConnection();
+	   DatabaseTime = dbconnection.serverTime.getTime();
+		display.getDefault().syncExec(new Runnable() {
 
 			public void run() {
-				dbconnection.timerConnection();
-				dbconnection.getCurtime(); //Holt die aktuelle Zeit
-				long timeDifference = dbconnection.curTime.getTime()-dbconnection.serverTime.getTime();
+				
+			//	dbconnection.getCurtime(); //Holt die aktuelle Zeit
+				long timeDifference = System.currentTimeMillis()-DatabaseTime;
 				Date anzeigeDate = new Date(timeDifference);
 				anzeigeDate.setHours(anzeigeDate.getHours()-1); //Eine Stunde abziehen, die aus mir unbekannten Gründen automatisch gesetzt ist
 				Runningstamp_button.setText(hms.format(anzeigeDate)); //Ausgabe auf Label
-				display.timerExec(1000, this);
+				display.getDefault().timerExec(1000, this);
 			}
 		});
 
@@ -226,6 +230,9 @@ public class Editor extends Shell {
 			public void widgetSelected(SelectionEvent e) {
 				// dbconnection.setTime();
 				dbconnection.setTime();
+				dbconnection.timerConnection();
+     		   DatabaseTime = dbconnection.serverTime.getTime();
+
 			}
 		});
 		
@@ -252,7 +259,7 @@ public class Editor extends Shell {
 		Timestamp_button.setText("13:37");
 		Timestamp_button.setBackgroundImage(Time_btn);
 
-		display.timerExec(0, new Runnable() {
+		display.syncExec(new Runnable() {
 			boolean bool = true;
 
 			public void run() {

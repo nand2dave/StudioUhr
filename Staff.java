@@ -12,7 +12,7 @@ import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.wb.swt.SWTResourceManager;
+//import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -35,6 +35,7 @@ public class Staff extends Shell {
 	int columnCount = 5;
 	int tableStartValue = 0; // Wenn man "Next-Button" drückt, muss diese
 								// Variable hochgezaehlt werden
+	private long DatabaseTime; //!!!
 
 	/**
 	 * Launch the application.
@@ -117,19 +118,19 @@ public class Staff extends Shell {
 		
 		/***ZAEHLER-BUTTON***/
 		Button Runningstamp_button = new Button(Running_comp, SWT.NONE);
-
-		display.timerExec(0, new Runnable() {
+		dbconnection.timerConnection();
+		DatabaseTime = dbconnection.serverTime.getTime();
+			
+		display.getDefault().syncExec(new Runnable() {
 
 
 				public void run() {
 
-					dbconnection.timerConnection();
-					dbconnection.getCurtime(); //Holt die aktuelle Zeit
-					long timeDifference = dbconnection.curTime.getTime()-dbconnection.serverTime.getTime();
+					long timeDifference = System.currentTimeMillis()-DatabaseTime;
 					Date anzeigeDate = new Date(timeDifference);
 					anzeigeDate.setHours(anzeigeDate.getHours()-1); //Eine Stunde abziehen, die aus mir unbekannten Gründen automatisch gesetzt ist
 					Runningstamp_button.setText(hms.format(anzeigeDate)); //Ausgabe auf Label
-					display.timerExec(1000, this);
+					display.getDefault().timerExec(1000, this);
 				}
 			});
 
@@ -187,7 +188,9 @@ public class Staff extends Shell {
 				System.out.println("ueberlauf: " + ueberlauf);
 				if(ueberlauf > dbconnection.serverBeitragsZeit.getSeconds())
 					System.out.println("Zeitüberschreitung um " + ((int) ueberlauf - dbconnection.serverBeitragsZeit.getSeconds()) + " Sekunden");
-				
+				dbconnection.setTime();
+				dbconnection.timerConnection();
+     		   DatabaseTime = dbconnection.serverTime.getTime();
 				dbconnection.deleteFirstRow();
 				//lösche oberste Zeile aus dem Table, wenn keine bestimmte Zeile angewählt ist
 				table.remove(table.getTopIndex());
@@ -207,11 +210,11 @@ public class Staff extends Shell {
 		/*** ZEIT-BUTTON ***/
 		Button Timestamp_button = new Button(Time_comp, SWT.NONE);
 		// Zeit vom Server holen
-		display.timerExec(0, new Runnable() {
+		display.getDefault().syncExec( new Runnable() {
 
 			public void run() {
 				Timestamp_button.setText(hms.format(dbconnection.serverTime));
-				display.timerExec(1000, this);
+				display.getDefault().timerExec(1000, this);
 			}
 		});
 
