@@ -10,6 +10,8 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 //import org.eclipse.wb.swt.SWTResourceManager;
@@ -35,7 +37,7 @@ public class Staff extends Shell {
 	int columnCount = 5;
 	int tableStartValue = 0; // Wenn man "Next-Button" drückt, muss diese
 								// Variable hochgezaehlt werden
-	private long DatabaseTime; //!!!
+	private long databaseTime; //!!!
 
 	/**
 	 * Launch the application.
@@ -45,6 +47,24 @@ public class Staff extends Shell {
 		try {
 			Display display = Display.getDefault();
 			Staff shell = new Staff(display);
+			
+			/**GLEICHE FUNKTIONALITAET DES NEXT-BUTTONS AUF DER LEERTASTE***/
+			shell.addKeyListener(new KeyListener() {
+	            public void keyPressed(KeyEvent event) {
+	                //switch (event.keyCode) {
+	                //case SWT.SPACE:
+	            	if (event.keyCode == SWT.SPACE)
+	                  System.out.println("Space gedrueckt!");
+	                //case SWT.ESC:
+	                //  System.out.println(SWT.ESC);
+	                //  break;
+	                //}
+	              }
+				@Override
+				public void keyReleased(KeyEvent e) {
+					// TODO Auto-generated method stub
+				}
+	          });
 			shell.open();
 			shell.layout();
 			while (!shell.isDisposed()) {
@@ -119,14 +139,14 @@ public class Staff extends Shell {
 		/***ZAEHLER-BUTTON***/
 		Button Runningstamp_button = new Button(Running_comp, SWT.NONE);
 		dbconnection.timerConnection();
-		DatabaseTime = dbconnection.serverTime.getTime();
+		databaseTime = dbconnection.serverTime.getTime();
 			
 		display.getDefault().syncExec(new Runnable() {
 
 
 				public void run() {
 
-					long timeDifference = System.currentTimeMillis()-DatabaseTime;
+					long timeDifference = System.currentTimeMillis()-databaseTime;
 					Date anzeigeDate = new Date(timeDifference);
 					anzeigeDate.setHours(anzeigeDate.getHours()-1); //Eine Stunde abziehen, die aus mir unbekannten Gründen automatisch gesetzt ist
 					Runningstamp_button.setText(hms.format(anzeigeDate)); //Ausgabe auf Label
@@ -190,7 +210,7 @@ public class Staff extends Shell {
 					System.out.println("Zeitüberschreitung um " + ((int) ueberlauf - dbconnection.serverBeitragsZeit.getSeconds()) + " Sekunden");
 				dbconnection.setTime();
 				dbconnection.timerConnection();
-     		   DatabaseTime = dbconnection.serverTime.getTime();
+     		   databaseTime = dbconnection.serverTime.getTime();
 				dbconnection.deleteFirstRow();
 				//lösche oberste Zeile aus dem Table, wenn keine bestimmte Zeile angewählt ist
 				table.remove(table.getTopIndex());
