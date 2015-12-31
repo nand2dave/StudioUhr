@@ -45,7 +45,7 @@ public class Editor extends Shell {
 	private Table table;
 
 	
-	private long DatabaseTime; //!!!
+	private long databaseTime; //!!!
 	/**
 	 * Launch the application.
 	 * @param args
@@ -189,13 +189,13 @@ public class Editor extends Shell {
 		Button Runningstamp_button = new Button(Running_comp, SWT.NONE);
 		Runningstamp_button.setText("00:00");
 		dbconnection.timerConnection();
-	   DatabaseTime = dbconnection.serverTime.getTime();
+	   databaseTime = dbconnection.serverTime.getTime();
 		display.getDefault().syncExec(new Runnable() {
 
 			public void run() {
 				
 			//	dbconnection.getCurtime(); //Holt die aktuelle Zeit
-				long timeDifference = System.currentTimeMillis()-DatabaseTime;
+				long timeDifference = System.currentTimeMillis()-databaseTime;
 				Date anzeigeDate = new Date(timeDifference);
 				anzeigeDate.setHours(anzeigeDate.getHours()-1); //Eine Stunde abziehen, die aus mir unbekannten Gründen automatisch gesetzt ist
 				Runningstamp_button.setText(hms.format(anzeigeDate)); //Ausgabe auf Label
@@ -231,7 +231,7 @@ public class Editor extends Shell {
 				// dbconnection.setTime();
 				dbconnection.setTime();
 				dbconnection.timerConnection();
-     		   DatabaseTime = dbconnection.serverTime.getTime();
+     		   databaseTime = dbconnection.serverTime.getTime();
 
 			}
 		});
@@ -242,8 +242,9 @@ public class Editor extends Shell {
 		Save_button.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				dbconnection.setTime();
-			}
-		});
+				dbconnection.prepareTable(table);
+				}
+			});
 		
 		
 		Button Manualstop_button = new Button(Buttons_comp, SWT.NONE);

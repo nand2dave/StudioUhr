@@ -6,6 +6,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.eclipse.swt.widgets.Table;
+
 
 
 public class DBConnection {
@@ -24,12 +26,70 @@ public class DBConnection {
 	 * inhalt = new String[5]; String[] typ = new String[5]; String[]
 	 * beitragszeit = new String[5]; String[] bemerkung = new String[5];
 	 */
-	String[][] dbinhalt = new String[5][5];
+	String[][] dbinhalt = new String[100][5];//[zeilen][spalten]
 
 	
 	Connection conn = null;
 	Statement stmt = null;
 	
+	public void openDatabaseConnection(){
+		
+		
+	}
+	
+	DBConnection save;
+	public void prepareTable(Table table){
+		//System.out.print("Spaltenanzahl: "+table.getItemCount()+"\n");		
+				for(int i = 0; i< table.getItemCount();i++)
+				{				
+					save.saveTable(table.getItem(i).getText(1),
+							table.getItem(i).getText(2),
+							table.getItem(i).getText(3),
+							table.getItem(i).getText(4));
+					System.out.println("in datenbank geschrieben: "+
+							table.getItem(i).getText(1)+
+							table.getItem(i).getText(2)+
+							table.getItem(i).getText(3)+
+							table.getItem(i).getText(4));
+					}
+				}
+	
+	public static void saveTable(String inhalt, String typ, String Dauer, String notes){
+		Connection conn = null;
+		try{
+		Class.forName("com.mysql.jdbc.Driver");
+		conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+		if(conn != null)
+		{
+			
+				// Insert-Statement erzeugen (Fragezeichen werden später ersetzt).
+				String sql = "INSERT INTO daten(Inhalt, Typ, Beitragszeit, Bemerkung) " +
+				"VALUES( ?, ?, ?, ?)";
+				PreparedStatement preparedStatement = conn.prepareStatement(sql);
+				// Erstes Fragezeichen durch "position" Parameter ersetzen
+				preparedStatement.setString(1, inhalt);
+				preparedStatement.setString(2, typ);
+				preparedStatement.setString(3, Dauer);
+				preparedStatement.setString(4, notes);
+				preparedStatement.executeUpdate();
+			}
+			if (conn != null)
+				conn.close();
+		}
+		catch (SQLException se) {
+			se.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {				
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException se) {
+				se.printStackTrace();
+			} // end finally try
+		} // end try
+			
+	}
 	
 	public void db_query(String query) {
 	//	Connection conn = null;
@@ -392,8 +452,19 @@ public class DBConnection {
 			stmt.executeUpdate("ALTER TABLE daten DROP position;");
 			stmt.executeUpdate("ALTER TABLE daten ADD position INT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (position), AUTO_INCREMENT=1;");
 			stmt.executeUpdate("INSERT INTO daten(Inhalt, Typ, Beitragszeit, Bemerkung) VALUES('Bsp.-Inhalt 1','Intro', '00:00:10','test')");
-			stmt.executeUpdate("INSERT INTO daten(Inhalt, Typ, Beitragszeit, Bemerkung) VALUES('Bsp.-Inhalt 2','Haupt-Teil', '00:00:15','test')");
-			stmt.executeUpdate("INSERT INTO daten(Inhalt, Typ, Beitragszeit, Bemerkung) VALUES('Bsp.-Inhalt 3','Outro', '00:00:15','test')");
+			stmt.executeUpdate("INSERT INTO daten(Inhalt, Typ, Beitragszeit, Bemerkung) VALUES('Bsp.-Inhalt 2','Haupt-Teil', '00:00:15','test 2')");
+			stmt.executeUpdate("INSERT INTO daten(Inhalt, Typ, Beitragszeit, Bemerkung) VALUES('Bsp.-Inhalt 3','Bsp.-Teil 3', '00:00:15','test 3')");
+			stmt.executeUpdate("INSERT INTO daten(Inhalt, Typ, Beitragszeit, Bemerkung) VALUES('Bsp.-Inhalt 4','Bsp.-Teil 4', '00:00:15','test 4')");
+			stmt.executeUpdate("INSERT INTO daten(Inhalt, Typ, Beitragszeit, Bemerkung) VALUES('Bsp.-Inhalt 5','Bsp.-Teil 5', '00:00:15','test 5')");
+			stmt.executeUpdate("INSERT INTO daten(Inhalt, Typ, Beitragszeit, Bemerkung) VALUES('Bsp.-Inhalt 6','Bsp.-Teil 6', '00:00:15','test 6')");
+			stmt.executeUpdate("INSERT INTO daten(Inhalt, Typ, Beitragszeit, Bemerkung) VALUES('Bsp.-Inhalt 7','Bsp.-Teil 7', '00:00:15','test 7')");
+			stmt.executeUpdate("INSERT INTO daten(Inhalt, Typ, Beitragszeit, Bemerkung) VALUES('Bsp.-Inhalt 8','Bsp.-Teil 8', '00:00:15','test 9')");
+			stmt.executeUpdate("INSERT INTO daten(Inhalt, Typ, Beitragszeit, Bemerkung) VALUES('Bsp.-Inhalt 9','Bsp.-Teil 9', '00:00:15','test 9')");
+			stmt.executeUpdate("INSERT INTO daten(Inhalt, Typ, Beitragszeit, Bemerkung) VALUES('Bsp.-Inhalt 10','Oureo', '00:00:10','test 10')");
+
+
+
+
 			System.out.println("Fertig!");
 			stmt.close();
 			conn.close();
