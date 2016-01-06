@@ -404,7 +404,7 @@ public class Moderator1 extends Shell {
 
 				Rectangle rect = getClientArea();
 
-				Slider_comp.setBackgroundImage(resize(back_scale, rect.width, rect.height));
+				slider.setBackgroundImage(resize(back_scale, rect.width, rect.height));
 
 			}
 
