@@ -152,10 +152,9 @@ public class Staff extends Shell {
 		Composite Running_comp = new Composite(this, SWT.NONE);
 		Running_comp.setLayout(new FillLayout(SWT.HORIZONTAL));
 		FormData fd_Running_comp = new FormData();
-		fd_Running_comp.top = new FormAttachment(Time_comp, 0, SWT.TOP);
-		fd_Running_comp.left = new FormAttachment(Time_comp, 26);
-		fd_Running_comp.right = new FormAttachment(0, 506);
-		fd_Running_comp.bottom = new FormAttachment(0, 144);
+		fd_Running_comp.top = new FormAttachment(Time_comp, 1, SWT.TOP);
+		fd_Running_comp.bottom = new FormAttachment(Time_comp, 0, SWT.BOTTOM);
+		fd_Running_comp.left = new FormAttachment(Time_comp, 156);
 		Running_comp.setLayoutData(fd_Running_comp);
 
 		/*** ZAEHLER-BUTTON ***/
@@ -194,6 +193,7 @@ public class Staff extends Shell {
 		Runningstamp_button.setBackgroundImage(Running_btn); // RUNNING BACKDROP
 
 		Composite Buttons_comp = new Composite(this, SWT.NONE);
+		fd_Running_comp.right = new FormAttachment(Buttons_comp, 0, SWT.RIGHT);
 		FillLayout fl_Buttons_comp = new FillLayout(SWT.HORIZONTAL);
 		fl_Buttons_comp.marginHeight = 20;
 		fl_Buttons_comp.spacing = 20;
@@ -201,11 +201,11 @@ public class Staff extends Shell {
 		Buttons_comp.setLayout(fl_Buttons_comp);
 		FormData fd_Buttons_comp = new FormData();
 		fd_Buttons_comp.top = new FormAttachment(Time_comp, 21);
-		fd_Buttons_comp.right = new FormAttachment(0, 508);
 		fd_Buttons_comp.left = new FormAttachment(0, 13);
 		Buttons_comp.setLayoutData(fd_Buttons_comp);
 
 		Composite Tabel_comp = new Composite(this, SWT.NONE);
+		fd_Buttons_comp.right = new FormAttachment(Tabel_comp, 0, SWT.RIGHT);
 		fd_Buttons_comp.bottom = new FormAttachment(Tabel_comp, -23);
 		Tabel_comp.setBackgroundMode(SWT.INHERIT_DEFAULT);
 
@@ -214,6 +214,9 @@ public class Staff extends Shell {
 
 		Button Next_button = new Button(Buttons_comp, SWT.NONE);
 		Next_button.setText("WEITER");
+		
+		Button Aktualisieren_button = new Button(Buttons_comp, SWT.NONE);
+		Aktualisieren_button.setText("AKTUALISIEREN");
 
 		/*** NEXT-BUTTON ***/
 		Next_button.addSelectionListener(new SelectionAdapter() {
@@ -282,6 +285,9 @@ public class Staff extends Shell {
 		fD2[0].setStyle(SWT.BOLD);
 
 		Timestamp_button.setFont(new Font(display, fD2[0]));
+		
+		fD2[0].setHeight(40);
+		
 		Runningstamp_button.setFont(new Font(display, fD2[0]));
 
 		fd_Tabel_comp.right = new FormAttachment(100, -79);

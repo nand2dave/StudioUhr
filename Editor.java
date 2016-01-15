@@ -222,7 +222,7 @@ public class Editor extends Shell {
 		Buttons_comp.setLayout(fl_Buttons_comp);
 		FormData fd_Buttons_comp = new FormData();
 		fd_Buttons_comp.top = new FormAttachment(Time_comp, 21);
-		fd_Buttons_comp.right = new FormAttachment(0, 508);
+		fd_Buttons_comp.right = new FormAttachment(0, 638);
 		fd_Buttons_comp.left = new FormAttachment(0, 13);
 		Buttons_comp.setLayoutData(fd_Buttons_comp);
 
@@ -255,6 +255,9 @@ public class Editor extends Shell {
 
 		Button Manualstop_button = new Button(Buttons_comp, SWT.NONE);
 		Manualstop_button.setText("STOP");
+		
+		Button Aktualisieren_button = new Button(Buttons_comp, SWT.NONE);
+		Aktualisieren_button.setText("AKTUALISIEREN");
 		Tabel_comp.setLayout(new FillLayout(SWT.HORIZONTAL));
 		FormData fd_Tabel_comp = new FormData();
 		fd_Tabel_comp.left = new FormAttachment(Time_comp, 0, SWT.LEFT);
@@ -288,8 +291,10 @@ public class Editor extends Shell {
 		FontData[] fD1 = Timestamp_button.getFont().getFontData();
 		fD1[0].setHeight(30);
 		fD1[0].setStyle(SWT.BOLD); // <---
-		Runningstamp_button.setFont(new Font(display, fD1[0]));
 		Timestamp_button.setFont(new Font(display, fD1[0]));
+		fD1[0].setHeight(40);
+		Runningstamp_button.setFont(new Font(display, fD1[0]));
+		
 
 		fd_Tabel_comp.right = new FormAttachment(100, -79);
 		fd_Tabel_comp.bottom = new FormAttachment(100);
