@@ -161,8 +161,6 @@ public class Editor extends Shell {
       @Override
       public void widgetSelected(SelectionEvent e) {
         Staff staff = new Staff(display);
-        // close();
-        // dispose();
         staff.main(null);
 
       }
@@ -217,10 +215,7 @@ public class Editor extends Shell {
 
     Manualstart_button.addSelectionListener(new SelectionAdapter() {
       public void widgetSelected(SelectionEvent e) {
-        // dbconnection.setTime();
         dbconnection.setTime();
-       // dbconnection.timerConnection();
-      //  databaseTime = dbconnection.serverTime.getTime();
         databaseTime = dbconnection.serverTime.getTime();
 
         //start the timer
@@ -290,7 +285,6 @@ public class Editor extends Shell {
         display.getDefault().syncExec(new Runnable() {
 
           public void run() {
-           // databaseTime = dbconnection.serverTime.getTime();
 
             // dbconnection.getCurtime(); //Holt die aktuelle Zeit
             long timeDifference = System.currentTimeMillis() - databaseTime;
