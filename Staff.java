@@ -39,6 +39,9 @@ public class Staff extends Shell {
   // Variable hochgezaehlt werden
   private long databaseTime; // !!!
 
+  boolean test;
+
+  
   // Open Connection to database
   public static DBConnection dbconnection = new DBConnection();
 
@@ -217,6 +220,18 @@ public class Staff extends Shell {
 
     Button Aktualisieren_button = new Button(Buttons_comp, SWT.NONE);
     Aktualisieren_button.setText("AKTUALISIEREN");
+    Aktualisieren_button.addSelectionListener(new SelectionAdapter() {
+      public void widgetSelected(SelectionEvent e) {
+        if (test == false){
+          test = true;        System.out.println(test);
+return;}
+        if (test == true){
+          test = false;
+        System.out.println(test);
+        return;}
+      }
+    });
+      
 
     /*** NEXT-BUTTON ***/
     Next_button.addSelectionListener(new SelectionAdapter() {
