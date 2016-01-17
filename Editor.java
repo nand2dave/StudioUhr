@@ -34,6 +34,9 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
@@ -409,6 +412,41 @@ public class Editor extends Shell {
             return;
           index++;
         }
+      }
+    });
+    
+    //Delete selected row, when  BACKSPACE ist pressed
+    table.addKeyListener(new KeyAdapter() {
+      int rowCount;
+      public void keyReleased(KeyEvent e) {
+        if (e.keyCode == SWT.BS){
+          dbconnection.deleteRow(table.getSelectionIndex());
+          
+          table.removeAll();
+          try {
+            rowCount = dbconnection.getRowCount();
+          } catch (SQLException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+          }
+          dbconnection.db_query("SELECT * FROM daten", rowCount);
+          for (int i = 0; i < rowCount; i++) {
+            TableItem item = new TableItem(table, SWT.NONE);
+            for (int j = 0; j < 5; j++) {
+              item.setText(j, dbconnection.dbinhalt[i][j]);
+            }
+          }
+          //make the remaining TableItems editible (otherwise they won't be)
+          for (int i = rowCount; i < 50; i++) {
+            TableItem item = new TableItem(table, SWT.NONE);
+          }
+          return;
+        }
+
+     /*   TableItem[] selection = table.getSelection();
+        TableItem row = (selection.length == 0) ? table.getItem(table
+            .getTopIndex()) : selection[0];
+*/
       }
     });
   }
