@@ -258,6 +258,7 @@ public class Editor extends Shell {
       int rowCount;
 
       public void widgetSelected(SelectionEvent e) {
+        table.removeAll();
         try {
           rowCount = dbconnection.getRowCount();
         } catch (SQLException e1) {
