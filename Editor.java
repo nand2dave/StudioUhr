@@ -47,6 +47,8 @@ public class Editor extends Shell {
   /*** DATENBANK-ANBINDUNG ***/
   public static DBConnection dbconnection = new DBConnection();
 
+  boolean isActive;
+  
   /**
    * Launch the application.
    * 
@@ -212,18 +214,21 @@ public class Editor extends Shell {
     /*** START-BUTTON ***/
     Button Manualstart_button = new Button(Buttons_comp, SWT.NONE);
     Manualstart_button.setText("START");
+
     Manualstart_button.addSelectionListener(new SelectionAdapter() {
       public void widgetSelected(SelectionEvent e) {
         // dbconnection.setTime();
         dbconnection.setTime();
-        dbconnection.timerConnection();
+       // dbconnection.timerConnection();
+      //  databaseTime = dbconnection.serverTime.getTime();
         databaseTime = dbconnection.serverTime.getTime();
-        
+
         //start the timer
-        databaseTime = dbconnection.serverTime.getTime();
         display.getDefault().syncExec(new Runnable() {
 
           public void run() {
+           // databaseTime = dbconnection.serverTime.getTime();
+
             // dbconnection.getCurtime(); //Holt die aktuelle Zeit
             long timeDifference = System.currentTimeMillis() - databaseTime;
             Date anzeigeDate = new Date(timeDifference);
@@ -252,6 +257,8 @@ public class Editor extends Shell {
     Button Manualstop_button = new Button(Buttons_comp, SWT.NONE);
     Manualstop_button.setText("STOP");
 
+    
+    /***AKTUALISIEREN-BUTTON***/
     Button Aktualisieren_button = new Button(Buttons_comp, SWT.NONE);
     Aktualisieren_button.setText("AKTUALISIEREN");
     Tabel_comp.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -275,6 +282,28 @@ public class Editor extends Shell {
             item.setText(j, dbconnection.dbinhalt[i][j]);
           }
         }
+        
+        dbconnection.timerConnection();
+        databaseTime = dbconnection.serverTime.getTime();
+
+        //start the timer
+        display.getDefault().syncExec(new Runnable() {
+
+          public void run() {
+           // databaseTime = dbconnection.serverTime.getTime();
+
+            // dbconnection.getCurtime(); //Holt die aktuelle Zeit
+            long timeDifference = System.currentTimeMillis() - databaseTime;
+            Date anzeigeDate = new Date(timeDifference);
+            anzeigeDate.setHours(anzeigeDate.getHours() - 1); 
+            // Eine Stunde abziehen, die automatisch Gründen gesetzt ist
+
+         // Ausgabe auf Label
+            Runningstamp_button.setText(hms.format(anzeigeDate)); 
+            display.getDefault().timerExec(1000, this);
+          }
+        });
+        
       }
     });
     
