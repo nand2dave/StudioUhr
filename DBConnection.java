@@ -40,9 +40,11 @@ public class DBConnection {
 		System.out.println("getRowCount()");
 
 		int x = 0;
-		stmt = conn.createStatement();
-		rs = stmt.executeQuery("SELECT COUNT(position) FROM daten");
-
+		//stmt = conn.createStatement();
+		//rs = stmt.executeQuery("SELECT COUNT(position) FROM daten");
+        preparedStatement = conn.prepareStatement("SELECT COUNT(position) FROM daten");
+        rs = preparedStatement.executeQuery();
+        
 		if (rs.next())
 			x = rs.getInt(1);
 		return x;
@@ -106,6 +108,7 @@ public class DBConnection {
 	
 	public void db_query(String query, int rowCount) {
 		try {
+		  /*
 			// STEP 2: Register JDBC driver
 			Class.forName("com.mysql.jdbc.Driver");
 
@@ -119,7 +122,10 @@ public class DBConnection {
 			// String sql;
 			// sql = "SELECT * FROM daten";
 			 rs = stmt.executeQuery(query);
-
+*/
+		  
+	        preparedStatement = conn.prepareStatement(query);
+	        rs = preparedStatement.executeQuery();
 			// STEP 5: Extract data from result set
 			int anzahlZeilen = rowCount; // !!!!je nachdem wieviele zeilen im editor
 									// eingegeben wurden!!!
@@ -149,7 +155,7 @@ public class DBConnection {
 			}
 			// STEP 6: Clean-up environment
 			rs.close();
-			stmt.close();
+		//	stmt.close();
 		} catch (SQLException se) {
 			// Handle errors for JDBC
 			se.printStackTrace();
@@ -180,14 +186,28 @@ public class DBConnection {
 	
 	public void setTime() {
 		try {
-			stmt = conn.createStatement();
-			stmt.executeUpdate("DELETE FROM echtzeit"); //vorherige Einträge leeren
+		  
+		  
+			//stmt = conn.createStatement(); 
+		  
+		  preparedStatement = conn.prepareStatement("DELETE FROM echtzeit");
+		  preparedStatement.executeUpdate();
+          preparedStatement = conn.prepareStatement("ALTER TABLE echtzeit DROP id");
+          preparedStatement.executeUpdate();
+          preparedStatement = conn.prepareStatement("ALTER TABLE echtzeit ADD id INT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (id), AUTO_INCREMENT=1");
+          preparedStatement.executeUpdate();
+          preparedStatement = conn.prepareStatement("INSERT INTO echtzeit(zeit) VALUES(CURTIME());");
+          preparedStatement.executeUpdate();
+		  
+	        preparedStatement = conn.prepareStatement("SELECT zeit FROM echtzeit");
+	        rs = preparedStatement.executeQuery();
+		  /*		stmt.executeUpdate("DELETE FROM echtzeit"); //vorherige Einträge leeren
 			// Table neu indizieren: 
 			stmt.executeUpdate("ALTER TABLE echtzeit DROP id");
 			stmt.executeUpdate("ALTER TABLE echtzeit ADD id INT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (id), AUTO_INCREMENT=1");
 			stmt.executeUpdate("INSERT INTO echtzeit(zeit) VALUES(CURTIME())");
 			rs = stmt.executeQuery("SELECT zeit FROM echtzeit");   
-						
+	*/					
 			//setze die Server-Zeit auf date-Variable
 			if (rs.next()){
 			
@@ -221,9 +241,11 @@ public class DBConnection {
 	String currentTime = "";
 	public void timerConnection() {
 		try {
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery("SELECT zeit FROM echtzeit");   
-						
+			//stmt = conn.createStatement();
+			//rs = stmt.executeQuery("SELECT zeit FROM echtzeit");   
+	        preparedStatement = conn.prepareStatement("SELECT zeit FROM echtzeit");
+	        rs = preparedStatement.executeQuery();	
+			
 			//setze die Server-Zeit auf date-Variable
 			if (rs.next()){
 			
@@ -265,8 +287,11 @@ public class DBConnection {
 	
 	public String getBeitragsZeit(){	
 		try {
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery("SELECT Beitragszeit FROM daten WHERE position = 1");			
+	//		stmt = conn.createStatement();
+		//	rs = stmt.executeQuery("SELECT Beitragszeit FROM daten WHERE position = 1");	
+			
+	        preparedStatement = conn.prepareStatement("SELECT Beitragszeit FROM daten WHERE position = 1");
+	        rs = preparedStatement.executeQuery();
 			
 			if (rs.next()){
 				Time time = rs.getTime("Beitragszeit");	
@@ -309,9 +334,11 @@ public class DBConnection {
 		String curtime = "";
 
 		try {
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery("SELECT CURTIME()");	
-			
+			//stmt = conn.createStatement();
+			//rs = stmt.executeQuery("SELECT CURTIME()");	
+	        preparedStatement = conn.prepareStatement("SELECT CURTIME()");
+	        rs = preparedStatement.executeQuery();
+	        
 			if (rs.next()){			
 				curtime = rs.getString(1);
 				Time time = rs.getTime(1);	
@@ -345,12 +372,21 @@ public class DBConnection {
 	//Löscht die erst Zeile aus der Tabelle "daten"
 	public void deleteFirstRow(){	
 		try {
+		  
+		  /*
 			stmt = conn.createStatement();
 			stmt.executeUpdate("DELETE FROM daten WHERE position = 1;");
 			//Primary Key neu durchnummerieren, von 1 beginnend
 			stmt.executeUpdate("ALTER TABLE daten DROP position;");
 			stmt.executeUpdate("ALTER TABLE daten ADD position INT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (position), AUTO_INCREMENT=1;");
 						stmt.close();
+						*/
+          preparedStatement = conn.prepareStatement("DELETE FROM daten WHERE position = 1;");
+          preparedStatement.executeUpdate();
+          preparedStatement = conn.prepareStatement("ALTER TABLE daten DROP position");
+          preparedStatement.executeUpdate();
+          preparedStatement = conn.prepareStatement("ALTER TABLE daten ADD position INT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (position), AUTO_INCREMENT=1;");
+          preparedStatement.executeUpdate();
 		}
 
 		catch (SQLException se) {
@@ -368,16 +404,15 @@ public class DBConnection {
 	
 	
 	public void deleteRow(int rowIndex){
+	  int index = rowIndex + 1;
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
-			stmt = conn.createStatement(); 
-			stmt.executeUpdate("DELETE FROM daten WHERE position = " + rowIndex + ";");
-
-			stmt.close();
-		}
-
-		catch (SQLException se) {
+          preparedStatement = conn.prepareStatement("DELETE FROM daten WHERE position = " + index);
+          preparedStatement.executeUpdate();
+          preparedStatement = conn.prepareStatement("ALTER TABLE daten DROP position");
+          preparedStatement.executeUpdate();
+          preparedStatement = conn.prepareStatement("ALTER TABLE daten ADD position INT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (position), AUTO_INCREMENT=1;");
+          preparedStatement.executeUpdate();
+		}	catch (SQLException se) {
 			se.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
