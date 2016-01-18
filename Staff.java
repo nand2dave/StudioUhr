@@ -41,7 +41,6 @@ public class Staff extends Shell {
 
   boolean test;
 
-  
   // Open Connection to database
   public static DBConnection dbconnection = new DBConnection();
 
@@ -84,9 +83,8 @@ public class Staff extends Shell {
       // Close database connection, when shell is disposed
       dbconnection.closeConnection();
 
-      //Clean up database, when shell is disposed
+      // Clean up database, when shell is disposed
       dbconnection.restartDatabase();
-
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -164,8 +162,8 @@ public class Staff extends Shell {
     Button Runningstamp_button = new Button(Running_comp, SWT.NONE);
     // open db-connection
     /*
-     * try { dbconnection.openConnection(); } catch (ClassNotFoundException
-     * | SQLException e2) { // TODO Auto-generated catch block
+     * try { dbconnection.openConnection(); } catch (ClassNotFoundException |
+     * SQLException e2) { // TODO Auto-generated catch block
      * e2.printStackTrace(); }
      */
     dbconnection.timerConnection();
@@ -221,17 +219,26 @@ public class Staff extends Shell {
     Button Aktualisieren_button = new Button(Buttons_comp, SWT.NONE);
     Aktualisieren_button.setText("AKTUALISIEREN");
     Aktualisieren_button.addSelectionListener(new SelectionAdapter() {
+      int rowCount;
+
       public void widgetSelected(SelectionEvent e) {
-        if (test == false){
-          test = true;        System.out.println(test);
-return;}
-        if (test == true){
-          test = false;
-        System.out.println(test);
-        return;}
+        table.removeAll();
+        try {
+          rowCount = dbconnection.getRowCount();
+        } catch (SQLException e1) {
+          // TODO Auto-generated catch block
+          e1.printStackTrace();
+        }
+        dbconnection.db_query("SELECT * FROM daten", rowCount);
+        for (int i = 0; i < rowCount; i++) {
+          TableItem item = new TableItem(table, SWT.NONE);
+          for (int j = 0; j < 5; j++) {
+            item.setText(j, dbconnection.dbinhalt[i][j]);
+          }
+        }
+
       }
     });
-      
 
     /*** NEXT-BUTTON ***/
     Next_button.addSelectionListener(new SelectionAdapter() {
@@ -260,8 +267,8 @@ return;}
         ueberlauf /= 1000; // ueberlauf in Sekunden umrechnen
         System.out.println("ueberlauf: " + ueberlauf);
         if (ueberlauf > dbconnection.serverBeitragsZeit.getSeconds())
-          System.out.println("Zeitüberschreitung um "
-              + ((int) ueberlauf - dbconnection.serverBeitragsZeit.getSeconds()) + " Sekunden");
+          System.out.println("Zeitüberschreitung um " + ((int) ueberlauf - dbconnection.serverBeitragsZeit.getSeconds())
+              + " Sekunden");
         dbconnection.setTime();
         dbconnection.timerConnection();
         databaseTime = dbconnection.serverTime.getTime();
@@ -330,9 +337,8 @@ return;}
     Column_dauer.setWidth(100);
     Column_dauer.setText("Dauer");
     /*
-     * TableColumn Column_echtzeit = new TableColumn(editor_table,
-     * SWT.CENTER); Column_echtzeit.setWidth(100);
-     * Column_echtzeit.setText("Echtzeit");
+     * TableColumn Column_echtzeit = new TableColumn(editor_table, SWT.CENTER);
+     * Column_echtzeit.setWidth(100); Column_echtzeit.setText("Echtzeit");
      */
     TableColumn Column_notes = new TableColumn(table, SWT.CENTER);
     Column_notes.setMoveable(true);
