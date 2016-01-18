@@ -237,6 +237,8 @@ public class Staff extends Shell {
           }
         }
 
+        dbconnection.timerConnection();
+        databaseTime = dbconnection.serverTime.getTime();
       }
     });
 
@@ -291,14 +293,26 @@ public class Staff extends Shell {
 
     /*** ZEIT-BUTTON ***/
     Button Timestamp_button = new Button(Time_comp, SWT.NONE);
-    // Zeit vom Server holen
-    display.getDefault().syncExec(new Runnable() {
+    display.syncExec(new Runnable() {
+      boolean bool = true;
 
       public void run() {
-        Timestamp_button.setText(hms.format(dbconnection.serverTime));
-        display.getDefault().timerExec(1000, this);
+        // anzeigeFormat.setTime(stunden, minuten, sekunden);
+        // Date time = new Date();
+
+        // Die Zeit vom Server nehmen, einmalig (für den Start)
+        if (bool) {
+          Timestamp_button.setText(hms.format(dbconnection.serverTime));
+          bool = false;
+        }
+
+        // Ab jetzt die Rechnerinterne Zeit nehmen
+        Date time = new Date();
+        Timestamp_button.setText(hms.format(time));
+        display.timerExec(1000, this);
       }
     });
+    
 
     Timestamp_button.setBackgroundImage(Time_btn); // &ASEFASD
 
