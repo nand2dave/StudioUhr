@@ -42,12 +42,12 @@ import org.eclipse.swt.widgets.Slider;
 import java.util.*;
 
 public class Moderator1 extends Shell {
-  private long DatabaseTime; //!!!
+  private long DatabaseTime; // !!!
   public static DBConnection dbconnection = new DBConnection();
 
- /* public void setConnection(DBConnection con){
-    dbconnection = con;
-  }*/
+  /*
+   * public void setConnection(DBConnection con){ dbconnection = con; }
+   */
   /**
    * 
    * Launch the application.
@@ -79,11 +79,11 @@ public class Moderator1 extends Shell {
         }
 
       }
-      
+
       // Close database connection, when shell is disposed
       dbconnection.closeConnection();
 
-      //Clean up database, when shell is disposed
+      // Clean up database, when shell is disposed
       dbconnection.restartDatabase();
 
     } catch (Exception e) {
@@ -195,7 +195,7 @@ public class Moderator1 extends Shell {
     Position_1_label.setFont(new Font(display, fD1[0]));
 
     Position_1_label.setBounds(10, 58, 35, 36);
-    
+
     try {
       dbconnection.openConnection();
     } catch (ClassNotFoundException e4) {
@@ -210,28 +210,21 @@ public class Moderator1 extends Shell {
     } catch (SQLException e1) {
       // TODO Auto-generated catch block
       e1.printStackTrace();
-    } 
-
-    if(!(dbconnection.dbinhalt[0][0] == null))
-      Position_1_label.setText(dbconnection.dbinhalt[0][0]);
+    }
 
     Label Position_2_label = new Label(Position_comp, SWT.NONE);
 
-    //Position_2_label.setFont(SWTResourceManager.getFont("Segoe UI", 20, SWT.NORMAL));
+    // Position_2_label.setFont(SWTResourceManager.getFont("Segoe UI", 20,
+    // SWT.NORMAL));
 
     Position_2_label.setFont(new Font(display, fD2[0]));
-
-    if(!(dbconnection.dbinhalt[1][0] == null))
-      Position_2_label.setText(dbconnection.dbinhalt[1][0]);
 
     Position_2_label.setBounds(10, 123, 85, 36);
 
     Label Position_3_label = new Label(Position_comp, SWT.NONE);
 
-    if(!(dbconnection.dbinhalt[2][0] == null))
-      Position_3_label.setText(dbconnection.dbinhalt[2][0]);
-
-    //Position_3_label.setFont(SWTResourceManager.getFont("Segoe UI", 20, SWT.NORMAL));
+    // Position_3_label.setFont(SWTResourceManager.getFont("Segoe UI", 20,
+    // SWT.NORMAL));
 
     Position_3_label.setFont(new Font(display, fD2[0]));
 
@@ -251,9 +244,6 @@ public class Moderator1 extends Shell {
 
     Label Inhalt_1_label = new Label(Inhalt_comp, SWT.NONE);
 
-    if(!(dbconnection.dbinhalt[0][1] == null))
-      Inhalt_1_label.setText(dbconnection.dbinhalt[0][1]);
-
     // Inhalt_1_label.setFont(SWTResourceManager.getFont("Segoe UI", 16,
 
     // SWT.BOLD));
@@ -264,21 +254,15 @@ public class Moderator1 extends Shell {
 
     Label Inhalt_2_label = new Label(Inhalt_comp, SWT.NONE);
 
-    if(!(dbconnection.dbinhalt[1][1] == null))
-      Inhalt_2_label.setText(dbconnection.dbinhalt[1][1]);
-
     // Inhalt_2_label.setFont(SWTResourceManager.getFont("Segoe UI", 20,
 
     // SWT.NORMAL));
 
     Inhalt_2_label.setFont(new Font(display, fD2[0]));
 
-    Inhalt_2_label.setBounds(0, 121, 162, 36);
+    Inhalt_2_label.setBounds(0, 121, 85, 36);
 
     Label Inhalt_3_label = new Label(Inhalt_comp, SWT.NONE);
-
-    if(!(dbconnection.dbinhalt[2][1] == null))
-      Inhalt_3_label.setText(dbconnection.dbinhalt[2][1]);
 
     // Inhalt_3_label.setFont(SWTResourceManager.getFont("Segoe UI", 20,
 
@@ -286,7 +270,7 @@ public class Moderator1 extends Shell {
 
     Inhalt_3_label.setFont(new Font(display, fD2[0]));
 
-    Inhalt_3_label.setBounds(0, 193, 162, 36);
+    Inhalt_3_label.setBounds(0, 193, 85, 36);
 
     Label label_10 = new Label(Inhalt_comp, SWT.SEPARATOR | SWT.HORIZONTAL);
 
@@ -302,9 +286,6 @@ public class Moderator1 extends Shell {
 
     Label Typ_1_label = new Label(Typ_comp, SWT.NONE);
 
-    if(!(dbconnection.dbinhalt[0][2] == null))
-      Typ_1_label.setText(dbconnection.dbinhalt[0][2]);
-
     // Typ_1_label.setFont(SWTResourceManager.getFont("Segoe UI", 16,
 
     // SWT.BOLD));
@@ -317,20 +298,15 @@ public class Moderator1 extends Shell {
 
     Label Typ_2_label = new Label(Typ_comp, SWT.NONE);
 
-    if(!(dbconnection.dbinhalt[1][2] == null))
-      Typ_2_label.setText(dbconnection.dbinhalt[1][2]);
-
     // Typ_2_label.setFont(SWTResourceManager.getFont("Segoe UI", 20,
 
     // SWT.NORMAL));
 
     Typ_2_label.setFont(new Font(display, fD2[0]));
 
-    Typ_2_label.setBounds(0, 121, 148, 36);
+    Typ_2_label.setBounds(0, 121, 85, 36);
 
     Label Typ_3_label = new Label(Typ_comp, SWT.NONE);
-    if(!(dbconnection.dbinhalt[2][2] == null))
-      Typ_3_label.setText(dbconnection.dbinhalt[2][2]);
 
     // Typ_3_label.setFont(SWTResourceManager.getFont("Segoe UI", 20,
 
@@ -338,56 +314,37 @@ public class Moderator1 extends Shell {
 
     Typ_3_label.setFont(new Font(display, fD2[0]));
 
-    Typ_3_label.setBounds(0, 195, 148, 36);
+    Typ_3_label.setBounds(0, 195, 85, 36);
 
     Label label_11 = new Label(Typ_comp, SWT.SEPARATOR | SWT.HORIZONTAL);
 
     label_11.setBounds(0, 99, 148, 2);
 
     Composite Dauer_comp = new Composite(Top_comp, SWT.NONE);
-    Dauer_comp.setLayout(null);
 
     Label TOP_Dauer_label = new Label(Dauer_comp, SWT.NONE);
-    TOP_Dauer_label.setBounds(0, 10, 85, 21);
 
     TOP_Dauer_label.setText("Dauer");
 
-    //TOP_Dauer_label.setBounds(10, 10, 85, 15);
+    TOP_Dauer_label.setBounds(10, 10, 85, 15);
 
-    Label Dauer_1_label = new Label(Dauer_comp, SWT.CENTER);
-    Dauer_1_label.setBounds(0, 34, 181, 70);
+    Label Dauer_1_label = new Label(Dauer_comp, SWT.NONE);
 
-    fD1[0].setHeight(30); //HOEHE DES ZAEHLER-LABELS 
+    // Dauer_1_label.setText("00:00:00");
+
+    // Dauer_1_label.setFont(SWTResourceManager.getFont("Segoe UI", 32,
+
+    // SWT.BOLD));
+
+    Dauer_1_label.setBounds(0, 31, 181, 166);
+
+    fD1[0].setHeight(38); // HOEHE DES ZAEHLER-LABELS
 
     fD1[0].setStyle(SWT.BOLD);
 
     Dauer_1_label.setFont(new Font(display, fD1[0]));
-  //  DBConnection dbconnection = new DBConnection();
-    dbconnection.timerConnection();
-    DatabaseTime = dbconnection.serverTime.getTime();
-
-    SimpleDateFormat hms = new SimpleDateFormat("HH:mm:ss");
-
-    display.timerExec(0, new Runnable() {
-      public void run() {
-        //dbconnection.timerConnection();
-        // dbconnection.getCurtime();
-        Date now = new Date();
-        long timeDifference = System.currentTimeMillis()-DatabaseTime;
-        Date anzeigeDate = new Date(timeDifference);
-        anzeigeDate.setHours(anzeigeDate.getHours() - 1);
-        Dauer_1_label.setText(hms.format(anzeigeDate));
-        display.timerExec(1000, this);
-      }
-    });
-
-    /*** ZAEHLER-LABEL ENDE ***/
 
     Label Dauer_2_label = new Label(Dauer_comp, SWT.NONE);
-    Dauer_2_label.setBounds(0, 125, 85, 36);
-    
-    if(!(dbconnection.dbinhalt[1][3] == null))
-      Dauer_2_label.setText(dbconnection.dbinhalt[1][3]);
 
     // Dauer_2_label.setFont(SWTResourceManager.getFont("Segoe UI", 20,
 
@@ -395,10 +352,9 @@ public class Moderator1 extends Shell {
 
     Dauer_2_label.setFont(new Font(display, fD2[0]));
 
+    Dauer_2_label.setBounds(0, 125, 85, 36);
+
     Label Dauer_3_label = new Label(Dauer_comp, SWT.NONE);
-    Dauer_3_label.setBounds(0, 197, 85, 36);
-    if(!(dbconnection.dbinhalt[2][3] == null))
-      Dauer_3_label.setText(dbconnection.dbinhalt[2][3]);
 
     // Dauer_3_label.setFont(SWTResourceManager.getFont("Segoe UI", 20,
 
@@ -406,7 +362,78 @@ public class Moderator1 extends Shell {
 
     Dauer_3_label.setFont(new Font(display, fD2[0]));
 
+    Dauer_3_label.setBounds(0, 197, 85, 36);
+
+    /*** ZAEHLER-LABEL ***/
+    // Dauer_1_label.setFont(SWTResourceManager.getFont("Segoe UI", 32,
+    // SWT.BOLD));
+    Dauer_1_label.setBounds(0, 31, 181, 166);
+    // DBConnection dbconnection = new DBConnection();
+    dbconnection.timerConnection();
+    DatabaseTime = dbconnection.serverTime.getTime();
+
+    SimpleDateFormat hms = new SimpleDateFormat("HH:mm:ss");
+
+    display.timerExec(0, new Runnable() {
+      public void run() {
+        DBConnection dbconnection = new DBConnection();
+        // dbconnection.timerConnection();
+        // dbconnection.getCurtime();
+        dbconnection.timerConnection();
+        DatabaseTime = dbconnection.serverTime.getTime();
+
+        Date now = new Date();
+        long timeDifference = System.currentTimeMillis() - DatabaseTime;
+        Date anzeigeDate = new Date(timeDifference);
+        anzeigeDate.setHours(anzeigeDate.getHours() - 1);
+        Dauer_1_label.setText(hms.format(anzeigeDate));
+        display.timerExec(1000, this);
+
+        try {
+          dbconnection.db_query("SELECT * FROM daten", dbconnection.getRowCount());
+        } catch (SQLException e1) {
+          // TODO Auto-generated catch block
+          e1.printStackTrace();
+        }
+        if (!(dbconnection.dbinhalt[0][0] == null))
+          Position_1_label.setText(dbconnection.dbinhalt[0][0]);
+
+        if (!(dbconnection.dbinhalt[1][0] == null))
+          Position_2_label.setText(dbconnection.dbinhalt[1][0]);
+
+        if (!(dbconnection.dbinhalt[2][0] == null))
+          Position_3_label.setText(dbconnection.dbinhalt[2][0]);
+
+        if (!(dbconnection.dbinhalt[0][1] == null))
+          Inhalt_1_label.setText(dbconnection.dbinhalt[0][1]);
+
+        if (!(dbconnection.dbinhalt[1][1] == null))
+          Inhalt_2_label.setText(dbconnection.dbinhalt[1][1]);
+
+        if (!(dbconnection.dbinhalt[2][1] == null))
+          Inhalt_3_label.setText(dbconnection.dbinhalt[2][1]);
+
+        if (!(dbconnection.dbinhalt[0][2] == null))
+          Typ_1_label.setText(dbconnection.dbinhalt[0][2]);
+
+        if (!(dbconnection.dbinhalt[1][2] == null))
+          Typ_2_label.setText(dbconnection.dbinhalt[1][2]);
+
+        if (!(dbconnection.dbinhalt[2][2] == null))
+          Typ_3_label.setText(dbconnection.dbinhalt[2][2]);
+
+        if (!(dbconnection.dbinhalt[1][3] == null))
+          Dauer_2_label.setText(dbconnection.dbinhalt[1][3]);
+
+        if (!(dbconnection.dbinhalt[2][3] == null))
+          Dauer_3_label.setText(dbconnection.dbinhalt[2][3]);
+      }
+    });
+
+    /*** ZAEHLER-LABEL ENDE ***/
+
     Label label_12 = new Label(Dauer_comp, SWT.SEPARATOR | SWT.HORIZONTAL);
+
     label_12.setBounds(0, 103, 181, 6);
 
     Composite Slider_comp = new Composite(Background_comp, SWT.NONE);
