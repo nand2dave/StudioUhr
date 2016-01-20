@@ -273,7 +273,7 @@ public class Moderator1 extends Shell {
 
     Inhalt_2_label.setFont(new Font(display, fD2[0]));
 
-    Inhalt_2_label.setBounds(0, 121, 85, 36);
+    Inhalt_2_label.setBounds(0, 121, 162, 36);
 
     Label Inhalt_3_label = new Label(Inhalt_comp, SWT.NONE);
 
@@ -286,7 +286,7 @@ public class Moderator1 extends Shell {
 
     Inhalt_3_label.setFont(new Font(display, fD2[0]));
 
-    Inhalt_3_label.setBounds(0, 193, 85, 36);
+    Inhalt_3_label.setBounds(0, 193, 162, 36);
 
     Label label_10 = new Label(Inhalt_comp, SWT.SEPARATOR | SWT.HORIZONTAL);
 
@@ -326,7 +326,7 @@ public class Moderator1 extends Shell {
 
     Typ_2_label.setFont(new Font(display, fD2[0]));
 
-    Typ_2_label.setBounds(0, 121, 85, 36);
+    Typ_2_label.setBounds(0, 121, 148, 36);
 
     Label Typ_3_label = new Label(Typ_comp, SWT.NONE);
     if(!(dbconnection.dbinhalt[2][2] == null))
@@ -338,39 +338,30 @@ public class Moderator1 extends Shell {
 
     Typ_3_label.setFont(new Font(display, fD2[0]));
 
-    Typ_3_label.setBounds(0, 195, 85, 36);
+    Typ_3_label.setBounds(0, 195, 148, 36);
 
     Label label_11 = new Label(Typ_comp, SWT.SEPARATOR | SWT.HORIZONTAL);
 
     label_11.setBounds(0, 99, 148, 2);
 
     Composite Dauer_comp = new Composite(Top_comp, SWT.NONE);
+    Dauer_comp.setLayout(null);
 
     Label TOP_Dauer_label = new Label(Dauer_comp, SWT.NONE);
+    TOP_Dauer_label.setBounds(0, 10, 85, 21);
 
     TOP_Dauer_label.setText("Dauer");
 
-    TOP_Dauer_label.setBounds(10, 10, 85, 15);
+    //TOP_Dauer_label.setBounds(10, 10, 85, 15);
 
-    Label Dauer_1_label = new Label(Dauer_comp, SWT.NONE);
+    Label Dauer_1_label = new Label(Dauer_comp, SWT.CENTER);
+    Dauer_1_label.setBounds(0, 34, 181, 70);
 
-  //  Dauer_1_label.setText("00:00:00");
-
-    // Dauer_1_label.setFont(SWTResourceManager.getFont("Segoe UI", 32,
-
-    // SWT.BOLD));
-
-    Dauer_1_label.setBounds(0, 31, 181, 166);
-
-    fD1[0].setHeight(38); //HOEHE DES ZAEHLER-LABELS 
+    fD1[0].setHeight(30); //HOEHE DES ZAEHLER-LABELS 
 
     fD1[0].setStyle(SWT.BOLD);
 
     Dauer_1_label.setFont(new Font(display, fD1[0]));
-
-    /*** ZAEHLER-LABEL ***/
-    //	Dauer_1_label.setFont(SWTResourceManager.getFont("Segoe UI", 32, SWT.BOLD));
-    Dauer_1_label.setBounds(0, 31, 181, 166);
   //  DBConnection dbconnection = new DBConnection();
     dbconnection.timerConnection();
     DatabaseTime = dbconnection.serverTime.getTime();
@@ -393,6 +384,7 @@ public class Moderator1 extends Shell {
     /*** ZAEHLER-LABEL ENDE ***/
 
     Label Dauer_2_label = new Label(Dauer_comp, SWT.NONE);
+    Dauer_2_label.setBounds(0, 125, 85, 36);
     
     if(!(dbconnection.dbinhalt[1][3] == null))
       Dauer_2_label.setText(dbconnection.dbinhalt[1][3]);
@@ -403,9 +395,8 @@ public class Moderator1 extends Shell {
 
     Dauer_2_label.setFont(new Font(display, fD2[0]));
 
-    Dauer_2_label.setBounds(0, 125, 85, 36);
-
     Label Dauer_3_label = new Label(Dauer_comp, SWT.NONE);
+    Dauer_3_label.setBounds(0, 197, 85, 36);
     if(!(dbconnection.dbinhalt[2][3] == null))
       Dauer_3_label.setText(dbconnection.dbinhalt[2][3]);
 
@@ -415,10 +406,7 @@ public class Moderator1 extends Shell {
 
     Dauer_3_label.setFont(new Font(display, fD2[0]));
 
-    Dauer_3_label.setBounds(0, 197, 85, 36);
-
     Label label_12 = new Label(Dauer_comp, SWT.SEPARATOR | SWT.HORIZONTAL);
-
     label_12.setBounds(0, 103, 181, 6);
 
     Composite Slider_comp = new Composite(Background_comp, SWT.NONE);
