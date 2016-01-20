@@ -188,6 +188,7 @@ public class Editor extends Shell {
     /*** ZAEHLER-BUTTON ***/
     Button Runningstamp_button = new Button(Running_comp, SWT.NONE);
     Runningstamp_button.setText("00:00:00");
+    Runningstamp_button.setToolTipText("Programmpunkt Laufzeit");
     dbconnection.timerConnection();
 
 
@@ -212,7 +213,8 @@ public class Editor extends Shell {
     /*** START-BUTTON ***/
     Button Manualstart_button = new Button(Buttons_comp, SWT.NONE);
     Manualstart_button.setText("START");
-
+    Manualstart_button.setToolTipText("Startet den Programmablauf");
+    
     Manualstart_button.addSelectionListener(new SelectionAdapter() {
       public void widgetSelected(SelectionEvent e) {
         dbconnection.setTime();
@@ -242,6 +244,7 @@ public class Editor extends Shell {
     /*** SPEICHERN-BUTTON ***/
     Button Save_button = new Button(Buttons_comp, SWT.NONE);
     Save_button.setText("SPEICHERN");
+    Save_button.setToolTipText("Speichert den Inhalt der Tabelle");
     Save_button.addSelectionListener(new SelectionAdapter() {
       public void widgetSelected(SelectionEvent e) {
         dbconnection.setTime();
@@ -251,11 +254,13 @@ public class Editor extends Shell {
 
     Button Manualstop_button = new Button(Buttons_comp, SWT.NONE);
     Manualstop_button.setText("STOP");
+    Manualstop_button.setToolTipText("Stopt das Programm/die Laufzeit");
 
     
     /***AKTUALISIEREN-BUTTON***/
     Button Aktualisieren_button = new Button(Buttons_comp, SWT.NONE);
     Aktualisieren_button.setText("AKTUALISIEREN");
+    Aktualisieren_button.setToolTipText("Aktualisiert die Tabelle mit den Werten aus der Datenbank");
     Tabel_comp.setLayout(new FillLayout(SWT.HORIZONTAL));
     FormData fd_Tabel_comp = new FormData();
     fd_Tabel_comp.left = new FormAttachment(Time_comp, 0, SWT.LEFT);
@@ -306,6 +311,7 @@ public class Editor extends Shell {
     Timestamp_button.setAlignment(SWT.CENTER);
     Timestamp_button.setText("13:37");
     Timestamp_button.setBackgroundImage(Time_btn);
+    Timestamp_button.setToolTipText("Globale Uhrzeit");
 
     display.syncExec(new Runnable() {
       boolean bool = true;
