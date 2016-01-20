@@ -192,6 +192,7 @@ public class Staff extends Shell {
     });
 
     Runningstamp_button.setBackgroundImage(Running_btn); // RUNNING BACKDROP
+    Runningstamp_button.setToolTipText("Programmpunkt Laufzeit"); 
 
     Composite Buttons_comp = new Composite(this, SWT.NONE);
     fd_Running_comp.right = new FormAttachment(Buttons_comp, 0, SWT.RIGHT);
@@ -212,12 +213,15 @@ public class Staff extends Shell {
 
     Button Save_button = new Button(Buttons_comp, SWT.NONE);
     Save_button.setText("SPEICHERN");
-
+    Save_button.setToolTipText("Speichert den Tabeleninhalt");
+    
     Button Next_button = new Button(Buttons_comp, SWT.NONE);
     Next_button.setText("WEITER");
-
+    Next_button.setToolTipText("Beendet den Aktuellen Programmpunkt und wechselt zum nächsten");
+    
     Button Aktualisieren_button = new Button(Buttons_comp, SWT.NONE);
     Aktualisieren_button.setText("AKTUALISIEREN");
+    Aktualisieren_button.setToolTipText("Aktualisiert die Tabelle mit den Werten aus der Datenbank");
     Aktualisieren_button.addSelectionListener(new SelectionAdapter() {
       int rowCount;
 
@@ -315,6 +319,7 @@ public class Staff extends Shell {
     
 
     Timestamp_button.setBackgroundImage(Time_btn); // &ASEFASD
+    Timestamp_button.setToolTipText("Globale Uhrzeit");
 
     FontData[] fD2 = Timestamp_button.getFont().getFontData();
     fD2[0].setHeight(30);
